@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <!-- HMTL file first version by Di Wu: stevenwudi@gmail.com -->
+    <!-- Original version is just plain ugly!-->
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Di Wu"/>
+		<meta name="description" content="Sheffield Vision Paper Reading Group"/>
+		<meta name="keywords" content="Di Wu,Sheffield, University,Computer Visio, Machine Learning"/>
+
+        <title>Welcome to Di Wu's home page</title>
+        <link rel="shortcut icon" href="http://vision.group.shef.ac.uk/Images/Profile.jpg">
+        <link rel="apple-touch-icon" href="http://vision.group.shef.ac.uk/Images/Profile.jpg"> 
+
+        <!-- Responsive desing--inclusion of the viewport tage-->
+        <!-- Then, within the body, use row-fluid classes within the container class-->
+       
+
+        <meta name="viewport" content="wiph=device-wiph, initial-scale=1.0">
+
+        <!-- For the .heading and .subheading class, we use the built-in p.lead
+            from Bootstrap and also import and use paired Google Fonts to make the
+            style look a little less default-->
+        <link href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" 
+          rel="stylesheet" type="text/css">
+
+        <!--javascript for footer-->
+        <script src="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fjquery.js"></script>
+        <script src="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap.js"></script>
+
+        <!-- Bootstrap-responsive css -->
+        <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+        <!-- Saved CSS file -->
+        <link rel="stylesheet" href="CSS//style1.css">
+
+
+    <!-- Google analytics snippet-->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-46685114-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+
+
+<!-- change background images-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- change background images-->
+<script type="text/javascript">
+    var i = 1;
+    setInterval(function () {
+        if (i == 5) {
+            i = 1;
+        }
+        var image = "CSS//back" + i + ".PNG";
+        var elem = ".heading";
+        $(elem).fadeOut('fast', function () {
+            $(elem).css("background", "url('" + image + "') center repeat-x").fadeIn('fast');
+
+        });
+        i++;
+    }, 8000);
+</script>
+    <!-- Mobile-friendly navbar adapted from example. -->
+    <!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar"
+                  data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="Publications.html">Publications</a></li>
+              <li  class="active"><a href="ResearchActivities.html">Research&Activities</a></li>
+              <li><a href="DiWuContact.html">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+
+<!--    <div class="row-fluid heading">
+        <div class="span12">
+          <h1>Welcome to Di Wu's Homepage</h1>               
+        </div>
+      </div> -->
+
+
+
+<div class="container">
+<div class="span12 copy row-fluid">
+
+
+<div class="row-fluid">
+        <div class="span2 asset">
+            <a href="http://www.eumssi.eu/">
+              <img class="img-polaroid" src="https://pbs.twimg.com/media/CWQkE8LWwAAf1sN.png"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+               EUMSSI Project
+            </div>
+            <div class="abstract_fig">
+        I join the EUMSSI (Event Understanding through and Multimodal Social Stream Interpretation) project. 
+        The EUMSSI project belongs to European Commission 7th framework (Programme: FP7-ICT). 
+        I focus working on the person identification and characterisation of people in video steams coming from broadcast TV. 
+        By identification, it is meant (1) detecting the speech segments and clustering them into different speakers 
+        (a task known as speaker diarization); (2) detecting faces and clustering them so that each cluster corresponds to a 
+        single identity (face diarization); (3) associating the faces with voices in order to build an audio-visual (AV) 
+        representation of all persons in the video, and as a side effect know when a person appears or speak in the video
+        document (AV fusion); and finally (4) actually name the different person clusters.
+                <p>
+            <a href="http://www.eumssi.eu/2015/12/try-out-eumssi-demo-now/"> Try out EUMSSI Demo now!</a>
+                </p>
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+<div class="row-fluid">
+        <div class="span2 asset">
+            <a href="https://tianchi.aliyun.com/competition/rankingList.htm?spm=0.0.0.0.CjYjGh&raceId=231506&season=0">
+              <img class="img-polaroid" src="https://tianchi.aliyun.com/images/data_regis02.jpg"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+               Alibaba Tianchi, Clothes Matching Challenge on Taobao.com
+            </div>
+            <div class="abstract_fig">
+        Taobao is one of the most famous Chinese website for online shopping, which is similar to eBay and Amazon. 
+        It facilities C2C retail by providing a platform for small businesses and individual entrepreneurs to open online stores.
+        In Taobao, apparel and accessories industries occupy the market by the vast majority of the share. 
+        Clothing matching (e.g. find appropriate pants and shoes for a shirt) is a very important topic in shopping guide. 
+        The extension of this technology can be widely applied to varieties of scenarios of big data marketing, such as search, 
+        recommendation, and  advertising etc,.
+        In this competition, data sets of clothing collocation from fashion experts, image data of Taobao items, 
+        and user behavior data are provided. Participants are required to train their model, which provides personalized, quality, 
+        professional clothing collocation suggestion.
+        Our team enemylessRain ranks the <em><b>7th</b></em> out of 2100 participating teams in the Season 1.
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+   <div class="row-fluid">
+        <div class="span2 asset">
+            <a href="http://www.multimediaeval.org/mediaeval2015/persondiscovery2015/">
+              <img class="img-polaroid" src="Images/MediaEvalM.PNG"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+               MediaEval Benchmarking Initiative for Multimedia Evaluation 2015, Wurzen, Germany
+            </div>
+            <div class="abstract_fig">
+                The workshop brought together task participants to present and discuss their findings, and prepare for future work. 
+                I participated for the "The 2015 Multimodal Person Discovery in Broadcast TV" track as team EUMSSI and our proposed
+                system ranked the <em><b>first</b></em> amongst other 9 international research teams. This task represents an extension of the (now completed) French REPERE challenge,
+                 which focused on multimodal person recognition in TV broadcast. The main objective of this challenge was to answer 
+                the two questions "Who speaks when?" and "Who appears when?" using any sources of information 
+                (including pre-existing biometric models and person names extracted from text overlay and speech transcripts). 
+                In this new task, only unsupervised algorithms (i.e., algorithms not relying on pre-existing labels or biometric models)
+                are admitted. To ensure high quality indexes, those algorithms should also help human annotators double-check these 
+                indexes by providing an evidence of the claimed identity (especially for people who are not yet famous).
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+
+     <div class="row-fluid">
+        <div class="span2 asset">
+            <a href="http://mlss2014.hiit.fi/">
+              <img class="img-polaroid" src="https://pbs.twimg.com/profile_images/378800000600437678/6d201ad5859019be644449c33a1ecb90.png"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                MLSS Machine Learning Summer School 2014, April 25 - May 4, 2014, Reykjavik, Iceland
+            </div>
+            <div class="abstract_fig">
+                 The Machine Learning Summer School (MLSS) is a great venue for graduate students,
+                 researchers, and professionals to learn about fundamental and advanced methods of machine learning,
+                 data analysis, and inference, from theory to practice. 
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+ <div class="row-fluid">
+        <div class="span2 asset">
+            <a href="http://ml.dcs.shef.ac.uk/gpss/">
+              <img class="img-polaroid" src="Images/GPSS.PNG"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                Gaussian Process Summer School 2014
+            </div>
+            <div class="abstract_fig">
+              The Gaussian Process Summer Schools are a series of meetings targeted 
+                at facilitating the understanding of Gaussian process models both in theory and practice.
+               Gaussian Process defines a prior over functions, which can be converted into a posterior over
+                functions once we have seen some data.
+                The Gaussian Process Summer Schools are a series of meetings targeted at facilitating the 
+                understanding of Gaussian process models both in theory and practice. The main summer schools are held in Sheffield, UK at the Sheffield Institute for Translational Neuroscience. 
+            </div>
+        </div>
+    </div>
+<hr>
+
+<div class="row-fluid">
+        <div class="span2 asset">
+             <a href="http://research.microsoft.com/en-us/labs/cambridge/"> <img class="img-polaroid" 
+                 src="http://research.microsoft.com/en-us/labs/cambridge/lab.jpg"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+               Summer Internship at MSRC
+            </div>
+            <div class="abstract_fig">
+                In the summer of 2013,  I was fortunate to have an internship 
+                at Microsoft Research Cambridge under the supervision of 
+                <a href="http://www.doc.ic.ac.uk/~bglocker/">Ben Glocker</a>. 
+                The project is based on Kinect sensor for asessing movement disorders patients.
+                It has been a truly amazing experience!
+            </div>
+        </div>
+    </div>
+<hr>
+
+<div class="row-fluid">
+        <div class="span2 asset">
+            <a href="http://www.kaggle.com/c/GestureChallenge">
+              <img class="img-polaroid" src="http://kaggle2.blob.core.windows.net/competitions/kaggle/2602/logos/front_page.png"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                CHALEARN Gesture Challenge
+            </div>
+            <div class="abstract_fig">
+                The challenge is to  predict the identity of 1 to 5 gestures from a vocabulary of 8 to 15 gesture tokens
+                recorded by Kinect camera. I have achieved the 8th in the leaderboard and have been invited to give an oral presentation at the
+                <a href="http://gesture.chalearn.org/dissemination/cvpr2012">CVPR 2012 workshop on Gesture Recognition, Rhode Island</a>.
+                 The code can be 
+                <a href="https://dl.dropboxusercontent.com/u/16873884/xiaozhuwudi.zip">donwloaded here</a>!
+
+            </div>
+        </div>
+    </div>
+<hr>
+
+<div class="row-fluid">
+        <div class="span2 asset">
+             <a href="https://www.coursera.org/"> <img class="img-polaroid" 
+                 src="https://lh4.googleusercontent.com/-Hk_9tP2dRg4/AAAAAAAAAAI/AAAAAAAABPk/hNXQpeyT4qo/s120-c/photo.jpg"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                Coursera
+            </div>
+            <div class="abstract_fig">
+                I have been a beneficiary of this new start-up where I can
+                "take the world's best courses, online, for free."
+                I have taken some interesting courses:
+                <table id="coursera" style="width:100%">
+                        <tr>
+                        <td><div class='link4'><a href="https://www.coursera.org/course/ml">Machine Learning by Andrew Ng.
+                            <div><img src="https://s3.amazonaws.com/coursera/topics/ml/small-icon.hover.png" style="float:right; margin: 4px 4px;">
+                                <div class="descption">Learn about the most effective machine learning techniques, and gain practice implementing them and 
+                                    getting them to work for yourself.</div>
+                            </div> </a></div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td><div class='link4'><a href="https://www.coursera.org/course/pgm">Probabilistic Graphical Models by Daphne Koller
+                            <div><img src="https://s3.amazonaws.com/coursera/topics/pgm/small-icon.hover.png" style="float:right; margin: 4px 4px;">
+                              <div class="descption"> Learn the basics of the PGM representation and how to construct them, using both human knowledge
+                                   and machine learning techniques.</div>
+                                </div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td><div class='link4'><a href="https://www.coursera.org/course/neuralnets">Neural Networks for Machine Learning by Geoffery Hinton
+                            <div><img src="https://s3.amazonaws.com/coursera/topics/neuralnets/small-icon.hover.png" style="float:right; margin: 4px 4px;">
+                                <div class="descption">Learn about artificial neural networks and how they're being used for machine learning, as applied to speech and object recognition, image segmentation, 
+                                modeling language and human motion, etc. We'll emphasize both the basic algorithms and the practical tricks needed to get them to work well.         
+                            </div></div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td><div class='link4'><a href="https://class.coursera.org/startup-001">Start up Engineering by B. Scrinivasan and V.Pande
+                            <div><img src="https://coursera-course-photos.s3.amazonaws.com/f0/4fba1627b59c96672c9c067eed24c0/logo.png" style="float:right; margin: 4px 4px;">
+                                <div class="descption">Learn the engineering skills needed to build a technology startup from the ground up.
+                            </div></div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td><div class='link4'><a href="https://www.coursera.org/course/cplusplus4c">C++ For C Programmers by Ira Pohl
+                            <div><img src="https://coursera-course-photos.s3.amazonaws.com/a8/5c08c3733378cb0084b2d43366edd3/Cplusplus_pic.jpg" style="float:right; margin: 4px 4px;">
+                                <div class="descption">This course is for experienced C programmers who want to program in C++. The examples and exercises require a basic understanding of algorithms and object-oriented software.
+                            </div></div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td><div class='link4'><a href="https://www.coursera.org/course/interactivepython">An Introduction to Interactive Programming in Python by J.Warren et al.
+                            <div><img src="https://s3.amazonaws.com/coursera/topics/interactivepython/small-icon.hover.png" style="float:right; margin: 4px 4px;">
+                                <div class="descption">This course is designed to be a fun introduction to the basics of programming in Python. Our main focus will be on building simple interactive games such as Pong, Blackjack and Asteroids.
+                            </div></div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+               </table> 
+                      
+               My Coursera profile: <a href="https://www.coursera.org/user/i/b332a0855664db32e64c8dd9d324250a" target="new">wudi</a>.
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+    <div class="row-fluid">
+        <div class="span2 asset">
+             <a href="https://www.coursera.org/"> <img class="img-polaroid" 
+                 src="https://lh4.googleusercontent.com/-slzOwsq8iv0/AAAAAAAAAAI/AAAAAAAADYM/eZUEoIMeNw8/photo.jpg"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                Udacity
+            </div>
+            <div class="abstract_fig">
+                I have been a beneficiary of this programming based learning programmes.
+                "bridge the gap between real world skills, relevant education, and employ".
+                I have taken some interesting courses:
+                <table id="udacity" style="width:100%">
+                        <tr>
+                        <td><div class='link4'><a href="https://www.udacity.com/course/cs344">Intro to Parallel Programming by NVidia.
+                            <div><img src="https://lh5.ggpht.com/lkq5D-G-UMgnK574HjI50bKwklgwoSqb37YRFYQnh6jQFravvrDPpxYUFbQFeJRkGLs-TkEBLF43omuUEfw=s277#w=436&h=268" style="float:right; margin: 4px 4px;">
+                                <div class="descption">Learn the fundamentals of parallel computing with the GPU and the CUDA programming environment by coding a series of image processing algorithms. 
+                                    #filters, #cuda. In collaboration with Nvidia.</div>
+                            </div> </a></div>
+                        </td>
+                        </tr>   
+                          
+                        <tr>
+                        <td><div class='link4'><a href="https://www.udacity.com/course/artificial-intelligence-for-robotics--cs373">Artificial Intelligence for Robotics by Sebastian Thrun.
+                            <div><img src="https://i.ytimg.com/vi/g-fk3RQiw5Q/mqdefault.jpg" style="float:right; margin: 4px 4px;">
+                                <div class="descption">Learn how to program all the major systems of a robotic car from the leader of Google and Stanford's autonomous driving teams. 
+                                    This class will teach you basic methods in Artificial Intelligence, including: probabilistic inference, planning and search, 
+                                    localization, tracking and control, all with a focus on robotics. Extensive programming examples and assignments will apply 
+                                    these methods in the context of building self-driving cars.
+                            </div></div>
+                            </a>
+                            </div>
+                        </td>
+                        </tr>
+
+                        <tr>
+                        <td><div class='link4'><a href="https://www.udacity.com/course/viewer#!/c-ud837">Android Development for Beginners.
+                            <div><img src="https://s3.amazonaws.com/content.udacity-data.com/site-svgs/nd_icons/nd801.svg" style="float:right; margin: 4px 4px;" height="150" width="150">
+                                <div class="descption">Learn the basics of Android and Java programming, and take the first step on your journey to becoming an Android developer.</div>
+                            </div> </a></div>
+                        </td>
+                        </tr> 
+
+               </table>                
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+
+<div class="row-fluid">
+        <div class="span2 asset">
+             <a href="http://www.kaggle.com/"> <img class="img-polaroid" src="http://www.kaggle.com/content/v/d6801c936e94/kaggle/img/site-logo.png"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                Kaggle
+            </div>
+            <div class="abstract_fig">
+                From time to time, I like to participate some interesting competitions on the "make science a sport" 
+                <a href="http://www.kaggle.com/">Kaggle platform</a> where companies and researchers post their data
+                 and statisticians and data miners from all over the world compete to produce the best models.
+                It's fascinating to see how machine learning technqiues are applied to tackle real-world problems.
+                My Kaggle account: <a href="http://www.kaggle.com/users/16463/stevenwudi">stevenwudi</a>
+            </div>
+        </div>
+    </div>
+<hr>
+
+<div class="row-fluid">
+        <div class="span2 asset">
+             <a href="https://github.com/"> <img class="img-polaroid" 
+                 src="https://assets-cdn.github.com/images/modules/open_graph/github-logo.png"></a>   
+        </div>
+        <div class="span9 publications">
+            <div class="paper_title">
+                Github
+            </div>
+            <div class="abstract_fig">
+                    My Github account: <a href="https://github.com/stevenwudi" target="new">stevenwudi</a>.
+                   <p>I am also writing some technical <a href="http://vision.group.shef.ac.uk/wordpress" target="new">blogs </a>.</p>
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+  </div>
+</div>
+
+      <!--  a little bit of JS, using the accordion like FAQ -->
+      <!-- This brings in jquery.js and bootstrap.js as dependencies. -->
+      <!-- http://twitter.github.io/bootstrap/javascript.html#collapse -->
+      <div class="row-fluid faq">
+          <div class="span10 offset1">
+            <h3>Miscellaneous</h3>
+            <div class="accordion" id="accordion2">
+               <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseZero">
+                    Programming languages
+                  </a>
+                </div>
+                <div id="collapseZero" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                   Python, C++, Matlab, CUDA (basic), Javascript (basic), Javascript(basic), SQL(basic), Java(basic)
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseOne">
+                    About my undergraduate
+                  </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    I received the B.Eng. degree in Electrical Engineering
+                      from the beautiful
+                      <a href="http://www.zju.edu.cn/english/">Zhejiang University</a>.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseThree">
+                    Reviewer
+                  </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    I have been serving as a reviewer for JMRL, MVAP, PR Letters, etc.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseTwo">
+                    Extra-curricular activities
+                  </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                     During my spare time, I enjoy playing badminton, playing the violin, watching films, hiking and gastronomy.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+      </div>
+
+    <div style="text-align:center">
+This document was last modified on:
+<script>
+    document.write(document.lastModified);
+</script>
+</div>
+    <!--GOOGLE Analytics API -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-46685114-1', 'shef.ac.uk');
+        ga('send', 'pageview');
+
+</script>
+</body>
+
+</html>
+
