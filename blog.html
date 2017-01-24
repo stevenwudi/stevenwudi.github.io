@@ -195,7 +195,9 @@
           <li> <b>Collect images for fish detection</b>: 
               <p>Thanks for the collective force from Kagglers, we have the <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25902/complete-bounding-box-annotation">
                   rectangular boundingbox</a> and <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25565/annotated-mouth-and-tail">mouth and tail</a> annotations
-                   for the fish from the very begining using <a href="https://github.com/cvhciKIT/sloth">annotation software sloth</a>. Note that because the annotations were done by different annotators, the mouth and tail position could be outside the rectangular boundingbox area.</p></li> 
+                   for the fish from the very begining using <a href="https://github.com/cvhciKIT/sloth">annotation software sloth</a>. Note that because the annotations were done by different annotators, 
+				   the mouth and tail position could be outside the rectangular boundingbox area. For every annotated fish, I extract around 10 times background images which is the same size of the annotated
+					fish but does not overlap with the fish image. </p></li> 
                 <div class="imgcap">
                  <img class="img-polaroid" src="Images/kaggle_fish/gt-demo.PNG" style="width: 40%">
                  <img class="img-polaroid" src="Images/kaggle_fish/head-tail-demo.PNG" style="width:40%"> 
@@ -220,7 +222,7 @@
                     <p><samp  style="font-size: 16px">32716/32716 [===================] - 1s - loss: 1.1921e-07 - acc: 1.0000 - val_loss: 0.0465 - val_acc: 0.9956</samp> </p>
                 </li>
             </ul>
-              Hence, we stick to Resnet50 for the following experiments.
+              Hence, we stick to Resnet50 for extracting convolutional features during the following experiments.
 
           <br />
           <li><b> Hard negative mining:</b></li>
@@ -228,7 +230,7 @@
               
         <br />
         <li> <b> Fine-tune convolutional layers of the Resnet</b>
-            <p>In this stage, we can fine tune the convolutional layers of the ResNet. Because the incorporateion data augmentation into the binary detector: <br/>
+            <p>In this stage, we can fine tune the convolutional layers of the ResNet. Because the incorporation of data augmentation into the binary detector: <br/>
                 <code style="font-size: 14px">
                 ImageDataGenerator(rescale=1.,
                                 featurewise_center=True,
