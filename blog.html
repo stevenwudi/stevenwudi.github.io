@@ -30,7 +30,7 @@
     <!-- Bootstrap-responsive css -->
     <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
     <!-- Saved CSS file -->
-    <link rel="stylesheet" href="CSS//style1.css">
+    <link rel="stylesheet" href="CSS/style1.css">
 
     <!-- Beautiful fonts and beautiful tables -->
     <link rel="stylesheet" type="text/css" href="CSS/normalize.css" />
@@ -95,61 +95,196 @@
     </div>
     <hr />
  
-<div class="row-fluid">
-        <div class="span2 asset">
-                <img class="img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/logos/front_page.png">   
+    <div class="row-fluid">
+            <div class="span2 asset">          
+                    <img class="img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/logos/front_page.png"> 
+            </div>
+        <div class="span9 publications">
+            <blockquote>
+                <p  style="font-size:20px">&#8220;Nearly half of the world depends on seafood for their main source of protein. In the Western and 
+                Central Pacific, where 60% of the world’s tuna is caught, illegal, unreported, and unregulated fishing practices are
+                    threatening marine ecosystems, global seafood supplies and local livelihoods.
+                    The Nature Conservancy is working with local, regional and global partners to preserve this fishery for the future.&#8221;</p>
+                <p style="text-align: right; font-size:20px">— excerpt from competition&#8217;s description page.</p>
+            </blockquote>
         </div>
-    <div class="span9 publications">
-        <blockquote>
-            <p>&#8220;Nearly half of the world depends on seafood for their main source of protein. In the Western and 
-            Central Pacific, where 60% of the world’s tuna is caught, illegal, unreported, and unregulated fishing practices are
-                threatening marine ecosystems, global seafood supplies and local livelihoods.
-                The Nature Conservancy is working with local, regional and global partners to preserve this fishery for the future&#8221;</p>
-            <p style="text-align: right">— excerpt from competition&#8217;s description page.</p>
-        </blockquote>
     </div>
-</div>
 
-<h3><b>The goal:  predict the likelihood of fish species in each picture.</b></h3>
+    <div class="row-fluid">
+        <h3><b>The goal:  predict the likelihood of fish species in each picture.</b></h3>
+         <div class="row-fluid">
+                <div>
+                    <img "img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 10px 10px;" width="45%" alt='Fish illustration' />
+                    
+                    <br />
+                    <p>     
+                        Eight target categories are available in this dataset:<br /> <b> Albacore tuna, Bigeye tuna, Yellowfin tuna, Mahi Mahi, Opah, Sharks, 
+                        Other</b> (meaning that there are fish present but not in the above categories), and <b>No Fish</b> (meaning that no fish is in the picture). 
+                    </p>
+
+                    <br />
+                    <h4>The Challenges in this competition:</h4>
+                        <p>
+                            <b> Imbalance of fish types:</b> Table 1 is a list of number of images for different types of fish. Hence, whether for the fish detection pipeline or for the fish classfication pipeline,
+                            it is crucial to have some what balanced number of images for different types of fish. Otherwise, the network might end up biasing towards certain fish (Albacore in this particular case)
+                            and the cute Moonfish could be biased against.
+                        </p>
+                        <p>
+                            <b> Various lighting conditions:</b> 
+                        </p>
+                    <br />
+                    <h4>The things that "makes life easier" in this competition:</h4>
+                          <p>
+                            <b> One fish per image:</b> Each image has only one fish category, except that there are sometimes very small fish in the pictures that are used as bait. 
+                        </p>
+       
+              </div>
+        </div>
+    </div>
+    <!-- Table 1 starts from here -->
+     <div class="row-fluid">
+      <div class="span11 asset" >
+          <div style="width: 40%; margin: 0 auto;">
+			    <table>     
+                    <caption>Table 1: number of images for various types of fish</caption>     
+			        <thead>
+				        <tr>
+					        <th>Abbreviation</th><th>Fish Full Name</th><th>Pic num. </th><th>Percentage</th>
+				        </tr>
+			        </thead>
+			        <tbody>
+				        <tr>
+					        <th>ALB</th><td>Albacore tuna</td><td>1719</td><td>44.35%</td>
+				        </tr>
+                        <tr>
+					        <th>BET</th><td>Bigeye tuna</td><td>200</td>><td>5.16%</td>
+				        </tr>
+                        <tr>
+					        <th>DOL</th><td>Dolphine Fish</td><td>117</td>><td>3.02%</td>
+				        </tr>
+                        <tr>
+					        <th>LAG</th><td>Opah</td><td>67</td>><td>1.73%</td>
+				        </tr>
+                        <tr>
+					        <th>SHARK</th><td>Various Shark</td><td>176</td>><td>4.54%</td>
+				        </tr>
+                        <tr>
+					        <th>YFT</th><td>Yellowfin Tuna</td><td>734</td>><td>18.94%</td>
+				        </tr>
+                        <tr>
+					        <th>OTHER</th><td>other fish</td><td>299</td>><td>7.71%</td>
+				        </tr>
+                        <tr>
+					        <th>NoF</th><td>Not of fish</td><td>564</td>><td>14.55%</td>
+				        </tr>
+                        <tr>
+					        <th>Sum</th><td> - </td><td>3876</td>><td>100%</td>
+				        </tr>
+			        </tbody>
+			    </table>   
+          </div> 
+          </div>       
+    </div>
+     <!-- Table 1 ends here -->
+   <div class="row-fluid">
+       <div class="span12 asset">
+        <h3><b>The Fish Classification Pipeline</b></h3> 
+        <h4><b>1. Fish Detection</b></h4>
+
+        <ul>
+          <li> <b>Collect images for fish detection</b>: 
+              <p>Thanks for the collective force from Kagglers, we have the <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25902/complete-bounding-box-annotation">
+                  rectangular boundingbox</a> and <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25565/annotated-mouth-and-tail">mouth and tail</a> annotations
+                   for the fish from the very begining using <a href="https://github.com/cvhciKIT/sloth">annotation software sloth</a>. Note that because the annotations were done by different annotators, the mouth and tail position could be outside the rectangular boundingbox area.</p></li> 
+                <div class="imgcap">
+                 <img class="img-polaroid" src="Images/kaggle_fish/gt-demo.PNG" style="width: 40%">
+                 <img class="img-polaroid" src="Images/kaggle_fish/head-tail-demo.PNG" style="width:40%"> 
+                 <div class="thecap" style="text-align:center">Fish annotations for shark of img_01307. Left: rectangular boundingbox; Right: mouth-and-tail annotation. </div>
+                </div>
+            <br/>
+          <li> <b>Train A Bottleneck CNN</b>: 
+
+              <p> I decided to go back to the good old HOG+SVM sliding window approach for pedestrian detection: collecting positive fish images and negativew background boat images.
+
+              <a href="https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html">
+              Building powerful image classification models using very little data</a>. </p>
+              <p>Because the nature of the images are still natural images, so we can directly use the pretrained network on Imagenet
+              and train a logistic regressor on top of the last convolutional layer. Note that the average size of the image is 180*180, however, the implementation of Resnet50 in Keras
+                  requires the input image's size larger than 197*197. Therefore, for training a fish/background detector using Resnet50, I always upsize the input image to 200*200.
+              </p>
+            <ul>
+                <li>VGG19: originally I start with the pretrained VGG19 from keras, after training for 50 epoches (~100 second), the logistic regression reaches:
+                    <p><samp style="font-size: 16px">32716/32716 [===================] - 2s - loss: 0.0485 - acc: 0.9970 - val_loss: 0.1134 - val_acc: 0.9925</samp></p>
+                </li>
+                <li>Resnet50: coherently to the aforementioned blog post, resnet produces better generalisation features using features from the last pooling layer:
+                    <p><samp  style="font-size: 16px">32716/32716 [===================] - 1s - loss: 1.1921e-07 - acc: 1.0000 - val_loss: 0.0465 - val_acc: 0.9956</samp> </p>
+                </li>
+            </ul>
+              Hence, we stick to Resnet50 for the following experiments.
+
+          <br />
+          <li><b> Hard negative mining:</b></li>
+            <p>We Follow the example of pedestrian detection using HOG+SVM pipeline:  </p>
+              
+        <br />
+        <li> <b> Fine-tune convolutional layers of the Resnet</b>
+            <p>In this stage, we can fine tune the convolutional layers of the ResNet. Because the incorporateion data augmentation into the binary detector: <br/>
+                <code style="font-size: 14px">
+                ImageDataGenerator(rescale=1.,
+                                featurewise_center=True,
+                                shear_range=0.2,
+                                zoom_range=0.2,
+                                rotation_range=360,
+                                horizontal_flip=True)
+                </code> <br/>
+                It's worth noting that the traininig accuracy is much lower than the bottleneck network because of the data augementation during the training.
+                        Also noted that because the network is fine-tuned all the convolutional layers, 
+                it takes considerably much longer time.</p>
+                <p> <samp style="font-size: 16px">11206/11206[===================] - 527s - loss: 0.1217 - acc: 0.9580 - val_loss: 0.0295 - val_acc: 0.9898</samp></p>
+
+          <br />
+          <li><b> Fully Connected Network(FCN) for fish detection:</b>
+            <p>FCN was populated by the paper by: <a href="#FCN">[Jonathan et al. 2015]</a>.
 
 
- <div class="row-fluid">
-
-        <div><img src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 4px 4px;">
-            <div class="descption">
-                Eight target categories are available in this dataset: <b> Albacore tuna, Bigeye tuna, Yellowfin tuna, Mahi Mahi, Opah, Sharks, 
-                Other</b> (meaning that there are fish present but not in the above categories), and <b>No Fish</b> (meaning that no fish is in the picture). 
-                Each image has only <b>one fish</b> category, except that there are sometimes very small fish in the pictures that are used as bait. 
-           
-			<table>
-			<thead>
-				<tr>
-					<th>Abbreviation</th><th>Full Name</th><th>Number of pictures</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<th>ALB</th><td>Albacore tuna</td><td>1719</td>
-				</tr><tr>
-					<th>ALB</th><td>Albacore tuna</td><td>1719</td>
-				</tr><tr>
-					<th>ALB</th><td>Albacore tuna</td><td>1719</td>
-				</tr><tr>
-					<th>ALB</th><td>Albacore tuna</td><td>1719</td>
-				</tr><tr>
-			</tbody>
-			</table>
-        </div> 
-      </div>
-                   
-</div>
-
-<h3><b>The Fish Classification Pipeline</b></h3>
-<h4><b>Software and hardware</b></h4>
+        </ul>
 
 
+          </li>
+        </ul>
+
+        <h4><b>2. Fish Alignment</b></h4>
+
+        <h4><b>3. Fish Classification</b></h4>
+
+    <h3>Training details...</h3>
 
 
+    <h3>Ideals that I didn't implement or fail to make it work</h3>
+        <ul>
+            <li>
+               <p><a href="https://deepsense.io/deep-learning-right-whale-recognition-kaggle/">Kaggle Right Whale Recognition from deepsense</a>: For fish detection, I actually start from their blog post
+                  where whale detection pipeline is the nowadays popular grid based. I experimented with their <a href="https://www.dropbox.com/s/rohrc1btslxwxzr/deepsense-whales.zip?dl=1">code</a> 
+                  but didn't manage to have the network converge for this fishery data.
+               </p>
+             
+            <li>
+                <p><a href="https://devblogs.nvidia.com/parallelforall/detectnet-deep-neural-network-object-detection-digits/"> DetectNet</a>: Deep Neural network for Object detection in DIGITS. 
+                    The DetectNet data representation is inspired by the representation of the paper by: <a href="#YOLO">[Redmon et al. 2015]</a>.
+                </p>    
+                  
+            </li>
+
+        </ul>
+
+
+    <h3>Conclusion</h3>
+
+    <h3>REFERENCES</h3>
+        <p id="YOLO">Redmon, J., Divvala, S., Girshick, R., and Farhadi, A. 2015. "You Only Look Once: Unified, Real-Time Object Detection." arXiv [cs.CV]. http://arxiv.org/abs/1506.02640.</p>
+        <p id="FCN">Long, Jonathan and Shelhamer, Evan and Darrell, Trevor. CVPR2015. "Fully Convolutional Networks for Semantic Segmentation".</p>
+    </div>
+       </div>
 </div>
 <!--GOOGLE Analytics API -->
 <script>

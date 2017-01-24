@@ -253,7 +253,7 @@ a:hover>div { display: block; }
 
 
 .descption {
-    font-size: 14px;
+    font-size: 50px;
     margin: 1%;
 }
 
@@ -271,3 +271,36 @@ img.align-right {
 img.wrap { max-width: 70%; margin: 30px 0px; }
 
 
+#images{
+    text-align:center;
+    margin:50px auto; 
+}
+#images a{
+    margin:0px 20px;
+    display:inline-block;
+    text-decoration:none;
+    color:black;
+ }
+
+h4 {
+    font-size: 18px;
+}
+
+li {
+    font-size: 17px;
+}
+#samp {
+     font-size: 14px;
+}
+
+/* AK custom CSS mods */
+.imgright { float: right; margin-left: 10px; }
+.imgcap img {
+  border: 1px solid #999;
+  max-width: 100%;
+}
+.imgcap {
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+}
