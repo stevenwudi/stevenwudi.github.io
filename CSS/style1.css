@@ -283,11 +283,15 @@ img.wrap { max-width: 70%; margin: 30px 0px; }
  }
 
 h4 {
-    font-size: 18px;
+    font-size: 22px;
+}
+
+ul {
+    font-size: 20px;
 }
 
 li {
-    font-size: 17px;
+    font-size: 18px;
 }
 #samp {
      font-size: 14px;
@@ -303,4 +307,9 @@ li {
   color: #555;
   font-size: 18px;
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.fancybox.title {
+    font-size: 30px;
 }

@@ -55,6 +55,20 @@
 
     <!-- change background images-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
+
+    <!-- image light box effect -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" />
+    <style type="text/css">
+        a.fancybox img {
+            margin: 10px;
+            border: none;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.6);
+            -o-transform: scale(1,1); -ms-transform: scale(1,1); -moz-transform: scale(1,1); -webkit-transform: scale(1,1); transform: scale(1,1); -o-transition: all 0.2s ease-in-out; -ms-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; -webkit-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out;
+        } 
+        a.fancybox:hover img {
+            position: relative; z-index: 999; -o-transform: scale(1.03,1.03); -ms-transform: scale(1.03,1.03); -moz-transform: scale(1.03,1.03); -webkit-transform: scale(1.03,1.03); transform: scale(1.03,1.03);
+        }
+    </style>
 </head>
 
 <body>
@@ -111,11 +125,12 @@
         </div>
     </div>
 
+     <hr />
     <div class="row-fluid">
         <h3><b>The goal:  predict the likelihood of fish species in each picture.</b></h3>
          <div class="row-fluid">
                 <div>
-                    <img "img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 10px 10px;" width="45%" alt='Fish illustration' />
+                    <img class="fancybox" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 10px 10px;" width="45%" alt='Fish illustration' />
                     
                     <br />
                     <p>     
@@ -144,7 +159,6 @@
     </div>
     <!-- Table 1 starts from here -->
      <div class="row-fluid">
-      <div class="span11 asset" >
           <div style="width: 40%; margin: 0 auto;">
 			    <table>     
                     <caption>Table 1: number of images for various types of fish</caption>     
@@ -184,10 +198,10 @@
 			        </tbody>
 			    </table>   
           </div> 
-          </div>       
     </div>
     <!-- Table 1 ends here -->
 
+   <hr />
    <div class="row-fluid">
        <div class="span12 asset">
         <h3><b>The Fish Classification Pipeline</b></h3> 
@@ -201,8 +215,8 @@
 				   the mouth and tail position could be outside the rectangular boundingbox area. For every annotated fish, I extract around 10 times background images which is the same size of the annotated
 					fish but does not overlap with the fish image. </p>
                <div class="imgcap">
-                 <img class="img-polaroid" src="Images/kaggle_fish/gt-demo.PNG" style="width: 45%">
-                 <img class="img-polaroid" src="Images/kaggle_fish/head-tail-demo.PNG" style="width:45%"> 
+                 <img class="fancybox" src="Images/kaggle_fish/gt-demo.PNG" style="width: 45%">
+                 <img class="fancybox" src="Images/kaggle_fish/head-tail-demo.PNG" style="width:45%"> 
                  <div class="thecap" style="text-align:center">Fish annotations for shark of img_01307. Left: rectangular boundingbox; Right: mouth-and-tail annotation. </div>
                </div>
               <br/>
@@ -227,9 +241,10 @@
                         <p><samp  style="font-size: 16px">32716/32716 [===================] - 1s - loss: 1.1921e-07 - acc: 1.0000 - val_loss: 0.0465 - val_acc: 0.9956</samp> </p>
                     </li>
                 </ul>
-                  Hence, we stick to Resnet50 for extracting convolutional features during the following experiments.
-              <br/>
+                  <p>Hence, we stick to Resnet50 for extracting convolutional features during the following experiments.<br/></p>
         </li>
+            
+
           <li><b> Hard negative mining:</b>
             <p>We Follow the example of pedestrian detection using HOG+SVM pipeline:  </p><br />
           </li>    
@@ -258,34 +273,49 @@
             </p>
 
                <p><b>Multiscale detection</b>: Because for our detection network, every output corresponds to a grid of 56*56 pixels. Moreover, there is a significant scale variation.
-                   Hence, I found it necessary to pass our FCN to several scales of the test image in order to adapt to the various scale of the images.
+                   Hence, I found it necessary to pass our FCN to several scales of the test image in order to adapt to the various scale of the images. Note that for training and two-class network
+                   for fish detection, the average fish size is 180*180 and the input image to the network is of size 200*200. Therefore, for the scales used in the experiment, I start from original image size
+                   and scale the image 1.1 times the size for 8 times. Therefore, in total there are 9 response maps from scale 1 to scale 1.1^8=2.14. As it can be seen in the following 
+                   <a href="#multiscale_1">two illustrations (click to zoom in)</a> that for larger fish (top), the small scale response map generates stronger confidence score whereas for smaller fish (bottom), upscaled
+                   response map generate stronger confidence score for the fish location.
                </p>
                 <div class="imgcap" id="multiscale_1">
-                  <img class="img-polaroid" src="Images/kaggle_fish/multiscale_img_01646.jpg" style="width:70%"> 
-                    <img class="img-polaroid" src="Images/kaggle_fish/multiscale_img_03652.jpg" style="width:70%">
-                 <div class="thecap" style="text-align:center">multiscale_1. We upscale the response maps to the original image size.</div>
+                  <img class="fancybox" src="Images/kaggle_fish/multiscale_img_01646.jpg" style="width: 45%" title="Large fish and its corresponding response maps"> 
+                  <img class="fancybox" src="Images/kaggle_fish/multiscale_img_03652.jpg" style="width: 48%" title="Small fish and its corresponding response maps">
+                 <div class="thecap" style="text-align:center">Illustrations of response maps of different input image size. For larger fish (top), the smaller scale response map(left) generates stronger confidence score 
+                     whereas for smaller fish (bottom), upscaled response map(middle to right) generate stronger confidence score for the fish location. The response maps are upscaled to the original image size.</div>
                </div>
 
-               <p><b>Attention map</b>: I notice that for the train detector, some boundary could generate very high response because of the artifact of the ships resembles the contours
-                   of fish. I heurist design an attention map that lower the response map near the boundary of left, right and top but not bottom since the salient area of the image could
+               <p><b>Attention map</b>: I notice that for the trained detector, some areas near the boundary could generate very high response because of the artifact of ships resembling the contours
+                   of fish. I heuristically design an attention map that lower the response map near the boundary of left, right and top but not bottom since the salient area of the image could
                    also appear at the bottom of the image but not very like near the top (e.g., sky). <a href="#attention_map">Figure</a> illustrate the effect of attention for cleaning up the
                    false positives.
                </p>
 
                <div class="imgcap" id="attention_map">
-                   <img class="img-polaroid" src="Images/kaggle_fish/out_mean.PNG" style="width:24%"> 
-                 <img class="img-polaroid" src="Images/kaggle_fish/attention_map.PNG" style="width:24%">
-                 <img class="img-polaroid" src="Images/kaggle_fish/out_mean_attention.PNG" style="width:24%"> 
-                 <img class="img-polaroid" src="Images/kaggle_fish/img_04004.jpg" style="width:22.5%">
-                 <div class="thecap" style="text-align:center">Attention map generation. </div>
+                   <img class="fancybox" src="Images/kaggle_fish/out_mean.PNG" title="origial response map" style="width:22%"> 
+                 <img class="fancybox" src="Images/kaggle_fish/attention_map.PNG" title="attention map mask" style="width:21%">
+                 <img class="fancybox" src="Images/kaggle_fish/out_mean_attention.PNG" title="filtered response map" style="width:22%"> 
+                 <img class="fancybox" src="Images/kaggle_fish/img_04004.jpg" title="highest confidence score correction " style="width:21%">
+                 <div class="thecap" style="text-align:center">Attention map generation. From left to right: (1) original response map; (2) attention map mask; (3) filtered response map;
+                     (4) the original response map will produce the red dot as the most confidence point for a fish in the image and the top area will be incorrectly chosen as the fish region, 
+                     after the adoption of attention map, the red star will be adjusted to have higher salience score.
+                 </div>
                </div>
 
             <p><b>Generating boundingbox from response maps</b>: 
-                   <b>Grid search for multiplying factor(0.4) and expanding factor(1.2): </b>
+                Now we have the response map and the useful information from the challenge that "Each image has only one fish category", we can simply choose the maximum response point as the centre 
+                of the fish and choose the connected region that higher than a <b><i>multiplying threshold</i></b> and expand the region by a <b><i>factor</i></b>. By grid searching, using <b>Intersection
+                    over Union (IoU)</b> as a evaluation criteria, I set the multiplying factor to be 0.4 and expanding factor to be 1.4. (A side note: in the IoU criteria, the predicted area is counted only as half.
+                 The reason is that we do want to have slightly larger area for the fish detection in order to have a whole fish detected, 
+                given that for fine-grained fish classification, the details of the fish are of crucial importance and we want the detected fish as complete as possible.)
             </p>
+            <div class="imgcap" id="Div1">
+                   <img class="fancybox" src="Images/kaggle_fish/bb_img_03547.jpg" style="width:80%"> 
+             </div>
 
             <p>
-                <i><b>Evalutation metrics for detection:</b></i> For <b> PASCAL VOC</b> the highest confidence bounding box with 50% overlap is considered correct; all others are incorrect.
+                <b>Evalutation metrics for detection:</b> For <b> PASCAL VOC</b> the highest confidence bounding box with 50% overlap is considered correct; all others are incorrect.
                 The paper <a href="#DETECTERROR">[Hoiem et al. 2012]</a> gave a details analysis of detection error.
                 However, in this experiment, I relax the condition that 30% overlap will suffice a correct detection.
             </p>
@@ -295,14 +325,16 @@
 
 
 
+    <hr />
+    <h4><b>2. Fish Alignment</b></h4>
 
-        <h4><b>2. Fish Alignment</b></h4>
+    <hr />
+    <h4><b>3. Fish Classification</b></h4>
 
-        <h4><b>3. Fish Classification</b></h4>
-
+    <hr />
     <h3>Training details...</h3>
 
-
+    <hr />
     <h3>Ideals that I didn't implement or fail to make it work</h3>
         <ul>
             <li>
@@ -320,9 +352,10 @@
 
         </ul>
 
-
+    <hr />
     <h3>Conclusion</h3>
 
+    <hr />
     <h3>REFERENCES</h3>
         <p id="YOLO">Redmon, J., Divvala, S., Girshick, R., and Farhadi, A. 2015. "You Only Look Once: Unified, Real-Time Object Detection." arXiv [cs.CV]. http://arxiv.org/abs/1506.02640.</p>
         <p id="FCN">Long, Jonathan and Shelhamer, Evan and Darrell, Trevor. CVPR2015. "Fully Convolutional Networks for Semantic Segmentation".</p>
@@ -331,6 +364,31 @@
     </div>
        </div>
 </div>
+
+<!-- image light box effect -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script>
+<script type="text/javascript">
+    $(function ($) {
+        var addToAll = false;
+        var gallery = true;
+        var titlePosition = 'inside';
+        $(addToAll ? 'img' : 'img.fancybox').each(function () {
+            var $this = $(this);
+            var title = $this.attr('title');
+            var src = $this.attr('data-big') || $this.attr('src');
+            var a = $('<a href="#" class="fancybox"></a>').attr('href', src).attr('title', title);
+            $this.wrap(a);
+        });
+        if (gallery)
+            $('a.fancybox').attr('rel', 'fancyboxgallery');
+        $('a.fancybox').fancybox({
+            titlePosition: titlePosition
+        });
+    });
+    $.noConflict();
+</script>
 <!--GOOGLE Analytics API -->
 <script>
     (function (i, s, o, g, r, a, m) {
