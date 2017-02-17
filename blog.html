@@ -69,6 +69,15 @@
             position: relative; z-index: 999; -o-transform: scale(1.03,1.03); -ms-transform: scale(1.03,1.03); -moz-transform: scale(1.03,1.03); -webkit-transform: scale(1.03,1.03); transform: scale(1.03,1.03);
         }
     </style>
+
+    <!-- NathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
 </head>
 
 <body>
@@ -127,19 +136,32 @@
 
      <hr />
     <div class="row-fluid">
+
+
         <h3><b>The goal:  predict the likelihood of fish species in each picture.</b></h3>
+
          <div class="row-fluid">
                 <div>
                     <img class="fancybox" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 10px 10px;" width="45%" alt='Fish illustration' />
                     
                     <br />
+                     <h4>Submission & Evaluation Metrics:</h4>
+                     <p>     
+                        Submissions are evaluated using the <i><b>multi-class logarithmic loss</b></i>. Each image has been labeled with <i><b>one</b></i> true class. For each image, you must submit a set of predicted probabilities
+                         (one for every image). The formula is then,
+                         $$
+                         logloss = -\frac{1}{N} \sum^{N}_{i=1} \sum^{M}_{j=1} y_{ij}  log(p_{ij}),
+                         $$
+                    </p>
+
+                    <h4>Target Categories:</h4>
                     <p>     
                         Eight target categories are available in this dataset:<br /> <b> Albacore tuna, Bigeye tuna, Yellowfin tuna, Mahi Mahi, Opah, Sharks, 
                         Other</b> (meaning that there are fish present but not in the above categories), and <b>No Fish</b> (meaning that no fish is in the picture). 
                     </p>
 
                     <br />
-                    <h4>The Challenges in this competition:</h4>
+                    
                         <p>
                             <b> Imbalance of fish types:</b> Table 1 is a list of number of images for different types of fish. Hence, whether for the fish detection pipeline or for the fish classfication pipeline,
                             it is crucial to have some what balanced number of images for different types of fish. Otherwise, the network might end up biasing towards certain fish (Albacore in this particular case)
