@@ -1,0 +1,430 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <!-- HMTL file first version by Di Wu: stevenwudi@gmail.com -->
+    <!-- Original version is just plain ugly!-->
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Di Wu"/>
+	<meta name="description" content="Di Wu's blog"/>
+	<meta name="keywords" content="Di Wu, Computer Visio, Machine Learning"/>
+
+    <title>Di Wu's solution for Kaggle's "The Nature Conversancy Fisheries Monitoring" challenge </title>
+    <link rel="shortcut icon" href="http://vision.group.shef.ac.uk/Images/Profile.jpg">
+    <link rel="apple-touch-icon" href="http://vision.group.shef.ac.uk/Images/Profile.jpg"> 
+
+    <!-- Responsive desing--inclusion of the viewport tage-->
+    <!-- Then, within the body, use row-fluid classes within the container class-->
+    <meta name="viewport" content="wiph=device-wiph, initial-scale=1.0">
+
+    <!-- For the .heading and .subheading class, we use the built-in p.lead
+        from Bootstrap and also import and use paired Google Fonts to make the
+        style look a little less default-->
+    <link href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" 
+        rel="stylesheet" type="text/css">
+
+    <!--javascript for footer-->
+    <script src="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fjquery.js"></script>
+    <script src="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap.js"></script>
+
+    <!-- Bootstrap-responsive css -->
+    <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+    <!-- Saved CSS file -->
+    <link rel="stylesheet" href="CSS/style1.css">
+
+    <!-- Beautiful fonts and beautiful tables -->
+    <link rel="stylesheet" type="text/css" href="CSS/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="CSS/demo.css" />
+	<link rel="stylesheet" type="text/css" href="CSS/component.css" />
+
+
+    <!-- Google analytics snippet-->
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-46685114-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+    <!-- change background images-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
+
+    <!-- image light box effect -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" />
+    <style type="text/css">
+        a.fancybox img {
+            margin: 10px;
+            border: none;
+            box-shadow: 0 1px 7px rgba(0,0,0,0.6);
+            -o-transform: scale(1,1); -ms-transform: scale(1,1); -moz-transform: scale(1,1); -webkit-transform: scale(1,1); transform: scale(1,1); -o-transition: all 0.2s ease-in-out; -ms-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; -webkit-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out;
+        } 
+        a.fancybox:hover img {
+            position: relative; z-index: 999; -o-transform: scale(1.03,1.03); -ms-transform: scale(1.03,1.03); -moz-transform: scale(1.03,1.03); -webkit-transform: scale(1.03,1.03); transform: scale(1.03,1.03);
+        }
+    </style>
+
+    <!-- NathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+</head>
+
+<body>
+    <!-- Mobile-friendly navbar adapted from example. -->
+    <!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar"
+                  data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="index.html">Home</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    <hr />
+
+<div class="container">
+    <div style="width:1200px;margin:0 auto">
+        <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring">
+            <p style="text-align:center;"> <img class="img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/TNC-FF-landing-page-banner.jpg"> </p>
+        </a>
+    <h1 class="page-title">
+        Di Wu's solution for Kaggle's 
+         "The Nature Conversancy Fisheries Monitoring"</h1>
+        <div style="text-align:center">
+            This document was last modified on:
+            <script>
+                document.write(document.lastModified);
+            </script>
+        </div>
+    </div>
+    <hr />
+ 
+    <div class="row-fluid">
+            <div class="span2 asset">          
+                    <img class="img-polaroid" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/logos/front_page.png"> 
+            </div>
+        <div class="span9 publications">
+            <blockquote>
+                <p  style="font-size:20px">&#8220;Nearly half of the world depends on seafood for their main source of protein. In the Western and 
+                Central Pacific, where 60% of the world’s tuna is caught, illegal, unreported, and unregulated fishing practices are
+                    threatening marine ecosystems, global seafood supplies and local livelihoods.
+                    The Nature Conservancy is working with local, regional and global partners to preserve this fishery for the future.&#8221;</p>
+                <p style="text-align: right; font-size:20px">— excerpt from competition&#8217;s description page.</p>
+            </blockquote>
+        </div>
+    </div>
+
+     <hr />
+    <div class="row-fluid">
+
+
+        <h3><b>The goal:  predict the likelihood of fish species in each picture.</b></h3>
+
+         <div class="row-fluid">
+                <div>
+                    <img class="fancybox" src="https://kaggle2.blob.core.windows.net/competitions/kaggle/5568/media/species-ref-key.jpg" style="float:right; margin: 10px 10px;" width="45%" alt='Fish illustration' />
+                    
+                    <br />
+                     <h4>Submission & Evaluation Metrics:</h4>
+                     <p>     
+                        Submissions are evaluated using the <i><b>multi-class logarithmic loss</b></i>. Each image has been labeled with <i><b>one</b></i> true class. For each image, you must submit a set of predicted probabilities
+                         (one for every image). The formula is then,
+                         $$
+                         logloss = -\frac{1}{N} \sum^{N}_{i=1} \sum^{M}_{j=1} y_{ij}  log(p_{ij}),
+                         $$
+                    </p>
+
+                    <h4>Target Categories:</h4>
+                    <p>     
+                        Eight target categories are available in this dataset:<br /> <b> Albacore tuna, Bigeye tuna, Yellowfin tuna, Mahi Mahi, Opah, Sharks, 
+                        Other</b> (meaning that there are fish present but not in the above categories), and <b>No Fish</b> (meaning that no fish is in the picture). 
+                    </p>
+
+                    <br />
+                    
+                        <p>
+                            <b> Imbalance of fish types:</b> Table 1 is a list of number of images for different types of fish. Hence, whether for the fish detection pipeline or for the fish classfication pipeline,
+                            it is crucial to have some what balanced number of images for different types of fish. Otherwise, the network might end up biasing towards certain fish (Albacore in this particular case)
+                            and the cute Moonfish could be biased against.
+                        </p>
+                        <p>
+                            <b> Various lighting conditions:</b> 
+                        </p>
+                    <br />
+                    <h4>The things that "makes life easier" in this competition:</h4>
+                          <p>
+                            <b> One fish per image:</b> Each image has only one fish category, except that there are sometimes very small fish in the pictures that are used as bait. 
+                        </p>
+       
+              </div>
+        </div>
+    </div>
+    <!-- Table 1 starts from here -->
+     <div class="row-fluid">
+          <div style="width: 40%; margin: 0 auto;">
+			    <table>     
+                    <caption>Table 1: number of images for various types of fish</caption>     
+			        <thead>
+				        <tr>
+					        <th>Abbreviation</th><th>Fish Full Name</th><th>Pic num. </th><th>Percentage</th>
+				        </tr>
+			        </thead>
+			        <tbody>
+				        <tr>
+					        <th>ALB</th><td>Albacore tuna</td><td>1719</td><td>44.35%</td>
+				        </tr>
+                        <tr>
+					        <th>BET</th><td>Bigeye tuna</td><td>200</td>><td>5.16%</td>
+				        </tr>
+                        <tr>
+					        <th>DOL</th><td>Dolphine Fish</td><td>117</td>><td>3.02%</td>
+				        </tr>
+                        <tr>
+					        <th>LAG</th><td>Opah</td><td>67</td>><td>1.73%</td>
+				        </tr>
+                        <tr>
+					        <th>SHARK</th><td>Various Shark</td><td>176</td>><td>4.54%</td>
+				        </tr>
+                        <tr>
+					        <th>YFT</th><td>Yellowfin Tuna</td><td>734</td>><td>18.94%</td>
+				        </tr>
+                        <tr>
+					        <th>OTHER</th><td>other fish</td><td>299</td>><td>7.71%</td>
+				        </tr>
+                        <tr>
+					        <th>NoF</th><td>Not of fish</td><td>564</td>><td>14.55%</td>
+				        </tr>
+                        <tr>
+					        <th>Sum</th><td> - </td><td>3876</td>><td>100%</td>
+				        </tr>
+			        </tbody>
+			    </table>   
+          </div> 
+    </div>
+    <!-- Table 1 ends here -->
+
+   <hr />
+   <div class="row-fluid">
+       <div class="span12 asset">
+        <h3><b>The Fish Classification Pipeline</b></h3> 
+
+        <h4><b>1. Fish Detection</b></h4>
+        <ul>
+          <li> <b>Collect images for fish detection</b>: 
+              <p>Thanks for the collective force from Kagglers, we have the <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25902/complete-bounding-box-annotation">
+                  rectangular boundingbox</a> and <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25565/annotated-mouth-and-tail">mouth and tail</a> annotations
+                   for the fish from the very begining using <a href="https://github.com/cvhciKIT/sloth">annotation software sloth</a>. Note that because the annotations were done by different annotators, 
+				   the mouth and tail position could be outside the rectangular boundingbox area. For every annotated fish, I extract around 10 times background images which is the same size of the annotated
+					fish but does not overlap with the fish image. </p>
+               <div class="imgcap">
+                 <img class="fancybox" src="Images/kaggle_fish/gt-demo.PNG" style="width: 45%">
+                 <img class="fancybox" src="Images/kaggle_fish/head-tail-demo.PNG" style="width:45%"> 
+                 <div class="thecap" style="text-align:center">Fish annotations for shark of img_01307. Left: rectangular boundingbox; Right: mouth-and-tail annotation. </div>
+               </div>
+              <br/>
+          </li> 
+
+            
+          <li> <b>Train A Bottleneck CNN</b>: 
+
+              <p> I decided to go back to the good old HOG+SVM sliding window approach for pedestrian detection: collecting positive fish images and negativew background boat images.
+                  <a href="https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html">
+                  Building powerful image classification models using very little data</a>. 
+              </p>
+              <p>Because the nature of the images are still natural images, so we can directly use the pretrained network on Imagenet
+                  and train a logistic regressor on top of the last convolutional layer. Note that the average size of the image is 180*180, however, the implementation of Resnet50 in Keras
+                  requires the input image's size larger than 197*197. Therefore, for training a fish/background detector using Resnet50, I always upsize the input image to 200*200.
+              </p>
+                <ul>
+                    <li>VGG19: originally I start with the pretrained VGG19 from keras, after training for 50 epoches (~100 second), the logistic regression reaches:
+                        <p><samp style="font-size: 16px">32716/32716 [===================] - 2s - loss: 0.0485 - acc: 0.9970 - val_loss: 0.1134 - val_acc: 0.9925</samp></p>
+                    </li>
+                    <li>Resnet50: coherently to the aforementioned blog post, resnet produces better generalisation features using features from the last pooling layer:
+                        <p><samp  style="font-size: 16px">32716/32716 [===================] - 1s - loss: 1.1921e-07 - acc: 1.0000 - val_loss: 0.0465 - val_acc: 0.9956</samp> </p>
+                    </li>
+                </ul>
+                  <p>Hence, we stick to Resnet50 for extracting convolutional features during the following experiments.<br/></p>
+        </li>
+            
+
+          <li><b> Hard negative mining:</b>
+            <p>We Follow the example of pedestrian detection using HOG+SVM pipeline:  </p><br />
+          </li>    
+             
+        <li> <b> Fine-tune convolutional layers of the Resnet</b>
+            <p>In this stage, we can fine tune the convolutional layers of the ResNet. Because the incorporation of data augmentation into the binary detector: <br/>
+                <code style="font-size: 14px">
+                ImageDataGenerator(rescale=1.,
+                                featurewise_center=True,
+                                shear_range=0.2,
+                                zoom_range=0.2,
+                                rotation_range=360,
+                                horizontal_flip=True)
+                </code> <br/>
+                It's worth noting that the traininig accuracy is much lower than the bottleneck network because of the data augementation during the training.
+                        Also noted that because the network is fine-tuned all the convolutional layers, 
+                it takes considerably much longer time.</p>
+                <p> <samp style="font-size: 16px">11206/11206[===================] - 527s - loss: 0.1217 - acc: 0.9580 - val_loss: 0.0295 - val_acc: 0.9898</samp></p>
+                <br />
+             </li>
+          <li><b> Fully Connected Network(FCN) for fish detection:</b>
+              <p></p>
+            <p><b>Fully connected to fully convolutional</b>: FCN was proposed by <a href="#OVERFEAT">[Sermanet et al. 2014]</a> and was populated by the paper by: <a href="#FCN">[Jonathan et al. 2015]</a>.
+                By converting the last layer before pooling which is a softmax layer, the trained binary fish classifier can be converted into a FCN. 
+                According to the network architecture, the output represents a heat map whether a grid cell of 56*56 corresponds to a fish.
+            </p>
+
+               <p><b>Multiscale detection</b>: Because for our detection network, every output corresponds to a grid of 56*56 pixels. Moreover, there is a significant scale variation.
+                   Hence, I found it necessary to pass our FCN to several scales of the test image in order to adapt to the various scale of the images. Note that for training and two-class network
+                   for fish detection, the average fish size is 180*180 and the input image to the network is of size 200*200. Therefore, for the scales used in the experiment, I start from original image size
+                   and scale the image 1.1 times the size for 8 times. Therefore, in total there are 9 response maps from scale 1 to scale 1.1^8=2.14. As it can be seen in the following 
+                   <a href="#multiscale_1">two illustrations (click to zoom in)</a> that for larger fish (top), the small scale response map generates stronger confidence score whereas for smaller fish (bottom), upscaled
+                   response map generate stronger confidence score for the fish location.
+               </p>
+                <div class="imgcap" id="multiscale_1">
+                  <img class="fancybox" src="Images/kaggle_fish/multiscale_img_01646.jpg" style="width: 45%" title="Large fish and its corresponding response maps"> 
+                  <img class="fancybox" src="Images/kaggle_fish/multiscale_img_03652.jpg" style="width: 48%" title="Small fish and its corresponding response maps">
+                 <div class="thecap" style="text-align:center">Illustrations of response maps of different input image size. For larger fish (top), the smaller scale response map(left) generates stronger confidence score 
+                     whereas for smaller fish (bottom), upscaled response map(middle to right) generate stronger confidence score for the fish location. The response maps are upscaled to the original image size.</div>
+               </div>
+
+               <p><b>Attention map</b>: I notice that for the trained detector, some areas near the boundary could generate very high response because of the artifact of ships resembling the contours
+                   of fish. I heuristically design an attention map that lower the response map near the boundary of left, right and top but not bottom since the salient area of the image could
+                   also appear at the bottom of the image but not very like near the top (e.g., sky). <a href="#attention_map">Figure</a> illustrate the effect of attention for cleaning up the
+                   false positives.
+               </p>
+
+               <div class="imgcap" id="attention_map">
+                   <img class="fancybox" src="Images/kaggle_fish/out_mean.PNG" title="origial response map" style="width:22%"> 
+                 <img class="fancybox" src="Images/kaggle_fish/attention_map.PNG" title="attention map mask" style="width:21%">
+                 <img class="fancybox" src="Images/kaggle_fish/out_mean_attention.PNG" title="filtered response map" style="width:22%"> 
+                 <img class="fancybox" src="Images/kaggle_fish/img_04004.jpg" title="highest confidence score correction " style="width:21%">
+                 <div class="thecap" style="text-align:center">Attention map generation. From left to right: (1) original response map; (2) attention map mask; (3) filtered response map;
+                     (4) the original response map will produce the red dot as the most confidence point for a fish in the image and the top area will be incorrectly chosen as the fish region, 
+                     after the adoption of attention map, the red star will be adjusted to have higher salience score.
+                 </div>
+               </div>
+
+            <p><b>Generating boundingbox from response maps</b>: 
+                Now we have the response map and the useful information from the challenge that "Each image has only one fish category", we can simply choose the maximum response point as the centre 
+                of the fish and choose the connected region that higher than a <b><i>multiplying threshold</i></b> and expand the region by a <b><i>factor</i></b>. By grid searching, using <b>Intersection
+                    over Union (IoU)</b> as a evaluation criteria, I set the multiplying factor to be 0.4 and expanding factor to be 1.4. (A side note: in the IoU criteria, the predicted area is counted only as half.
+                 The reason is that we do want to have slightly larger area for the fish detection in order to have a whole fish detected, 
+                given that for fine-grained fish classification, the details of the fish are of crucial importance and we want the detected fish as complete as possible.)
+            </p>
+            <div class="imgcap" id="Div1">
+                   <img class="fancybox" src="Images/kaggle_fish/bb_img_03547.jpg" style="width:80%"> 
+             </div>
+
+            <p>
+                <b>Evalutation metrics for detection:</b> For <b> PASCAL VOC</b> the highest confidence bounding box with 50% overlap is considered correct; all others are incorrect.
+                The paper <a href="#DETECTERROR">[Hoiem et al. 2012]</a> gave a details analysis of detection error.
+                However, in this experiment, I relax the condition that 30% overlap will suffice a correct detection.
+            </p>
+
+           </li>
+        </ul>
+
+
+
+    <hr />
+    <h4><b>2. Fish Alignment</b></h4>
+
+    <hr />
+    <h4><b>3. Fish Classification</b></h4>
+
+    <hr />
+    <h3>Training details...</h3>
+
+    <hr />
+    <h3>Ideals that I didn't implement or fail to make it work</h3>
+        <ul>
+            <li>
+               <p><a href="https://deepsense.io/deep-learning-right-whale-recognition-kaggle/">Kaggle Right Whale Recognition from deepsense</a>: For fish detection, I actually start from their blog post
+                  where whale detection pipeline is the nowadays popular grid based. I experimented with their <a href="https://www.dropbox.com/s/rohrc1btslxwxzr/deepsense-whales.zip?dl=1">code</a> 
+                  but didn't manage to have the network converge for this fishery data.
+               </p>
+             
+            <li>
+                <p><a href="https://devblogs.nvidia.com/parallelforall/detectnet-deep-neural-network-object-detection-digits/"> DetectNet</a>: Deep Neural network for Object detection in DIGITS. 
+                    The DetectNet data representation is inspired by the representation of the paper by: <a href="#YOLO">[Redmon et al. 2015]</a>.
+                </p>    
+                  
+            </li>
+
+        </ul>
+
+    <hr />
+    <h3>Conclusion</h3>
+
+    <hr />
+    <h3>REFERENCES</h3>
+        <p id="YOLO">Redmon, J., Divvala, S., Girshick, R., and Farhadi, A. 2015. "You Only Look Once: Unified, Real-Time Object Detection." arXiv [cs.CV]. http://arxiv.org/abs/1506.02640.</p>
+        <p id="FCN">Long, Jonathan and Shelhamer, Evan and Darrell, Trevor. CVPR2015. "Fully Convolutional Networks for Semantic Segmentation".</p>
+        <p id="OVERFEAT"> P. Sermanet, D. Eigen, X. Zhang, M. Mathieu, R. Fergus, and Y. LeCun. Overfeat: Integrated recognition, localization and detection using convolutional networks. In ICLR, 2014.</p> 
+        <p id="DETECTERROR">Hoiem, D., Chodpathumwan, Y., and Dai, Q. 2012. Diagnosing Error in Object Detectors. Computer Vision – ECCV 2012, Springer Berlin Heidelberg, 340–353. </p> 
+    </div>
+       </div>
+</div>
+
+<!-- image light box effect -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script>
+<script type="text/javascript">
+    $(function ($) {
+        var addToAll = false;
+        var gallery = true;
+        var titlePosition = 'inside';
+        $(addToAll ? 'img' : 'img.fancybox').each(function () {
+            var $this = $(this);
+            var title = $this.attr('title');
+            var src = $this.attr('data-big') || $this.attr('src');
+            var a = $('<a href="#" class="fancybox"></a>').attr('href', src).attr('title', title);
+            $this.wrap(a);
+        });
+        if (gallery)
+            $('a.fancybox').attr('rel', 'fancyboxgallery');
+        $('a.fancybox').fancybox({
+            titlePosition: titlePosition
+        });
+    });
+    $.noConflict();
+</script>
+<!--GOOGLE Analytics API -->
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-46685114-1', 'shef.ac.uk');
+    ga('send', 'pageview');
+
+</script>
+</body>
+
+</html>
+
