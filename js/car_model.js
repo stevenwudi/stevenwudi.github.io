@@ -10,6 +10,7 @@ var clock = new THREE.Clock();
 var ambientLight, light;
 
 var mesh;
+var frame = 0 ;
 
 function init() {
     // CAMERA
@@ -24,7 +25,9 @@ function init() {
 
     // RENDERER
     renderer = new THREE.WebGLRenderer( {antialias: true } );
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth/1.2, window.innerHeight/1.3);
+    //renderer.setSize(800, 800);
+
 
     var container = document.getElementById('container');
     container.appendChild( renderer.domElement );
@@ -92,13 +95,15 @@ function render() {
     var delta = clock.getDelta();
     cameraControls.update(delta);
 
-    if(mesh.position.y >= 50){
-        mesh.position.y -= 1;
-        mesh.position.z += 1;
-        mesh.rotation.y -= 0.005;
-    }
-
     renderer.render( scene, camera );
+    if (frame > 1) {
+        if (mesh.position.y >= 0) {
+            mesh.position.y -= 1;
+            mesh.position.z += 1;
+            mesh.rotation.y -= 0.005;
+        }
+    }
+    frame += 1;
 }
 
 try {
