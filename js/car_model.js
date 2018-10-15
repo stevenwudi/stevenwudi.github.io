@@ -59,7 +59,7 @@ function fillScene() {
         // onLoad callback
         function ( geometry) {
             mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial());
-            mesh.position.y += 300;
+            mesh.position.y += 200;
             mesh.position.x += 600;
             scene.add( mesh );
         },
@@ -97,7 +97,7 @@ function render() {
 
     renderer.render( scene, camera );
     if (frame > 1) {
-        if (mesh.position.y >= 0) {
+        if (mesh.position.y >= -200) {
             mesh.position.y -= 1;
             mesh.position.z += 1;
             mesh.rotation.y -= 0.005;
