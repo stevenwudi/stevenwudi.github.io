@@ -47,11 +47,11 @@
         $(document).ready(function () {
             headline_count = $("div.headline").size();
             $("div.headline:eq(" + current_headline + ")").css('top', '5px');
-            headline_interval = setInterval(headline_rotate, 5000); //time in milliseconds
+            headline_interval = setInterval(headline_rotate, 10000); //time in milliseconds
             $('#scrollup').hover(function () {
                 clearInterval(headline_interval);
             }, function () {
-                headline_interval = setInterval(headline_rotate, 5000); //time in milliseconds
+                headline_interval = setInterval(headline_rotate, 10000); //time in milliseconds
                 headline_rotate();
             });
         });
@@ -159,13 +159,20 @@
                 <div class="abstract_fig">
                     <div id="scrollup">
                         <div class="headline">
-                            <strong><b>[01-08-2017] <i>Implementing state-of-the-art visual trackers</i> </b></strong>
+                            <strong><b>[10-09-2018] <i><a href="http://apolloscape.auto/ECCV/challenge.html">
+                                1st cash prize winner in AppoloScape ECCV 2018 3D car instance understanding challenge</a></i> </b></strong>
                             <br /> <b></b>
-                            <p>I am implementing a series of state-of-the-art visual trackers of
-                            <a href="http://users.isy.liu.se/en/cvl/marda26/">Martin Danelljan</a>.
-                            I am converting code from Matlab to python and the repo is:
-                            <a href="https://github.com/stevenwudi/Martin_Danelljan_code">
-                                https://github.com/stevenwudi/Martin_Danelljan_code</a>.
+                            <p> As the main developer, I lead the team to finish the first in this challenge!
+                                The challenge is to design a system that can detect, reconstruct and estimate the
+                                3D shape of the cars in a given video in a single image.
+                        </div>
+
+                        <div class="headline">
+                            <strong><b>[11-06-2018] <i><a href="https://www.kaggle.com/c/cvpr-2018-autonomous-driving/leaderboard">
+                                3rd cash prize winner in Kaggle CVPR 2018 WAD video segmentation challenge</a></i> </b></strong>
+                            <br /> <b></b>
+                            <p> As the main developer, I lead the team to finish the 3rd in this challenge with cash prize!
+                                Participants include tech companies such as Megvii, DiDi, Nvidia Research, etc.
                         </div>
 
                         <div class="headline">

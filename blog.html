@@ -170,6 +170,21 @@
                         <p>
                             <b> Various lighting conditions:</b> 
                         </p>
+
+                    <p>
+                        <b>Similar types: albacore vs. bigeye:</b>
+                            <a href="http://fishidentificationblog.blogspot.com/p/tuna-species.html">Photos</a>
+                            <li>
+                               <b>Albacore tuna:</b>  Extrem long pectoral fin (side fin), can exceed the 1. dorsal fin up to the anal fin (lower fin, close to the tail). Very dark upper body. Silver bright belly (lower body) without vertical/horizontal lines Black finlets (between 2. dorsal fin and tail)
+                            </li>
+
+                            <li>
+                                 <b>Big Eye Tuna:</b> Pectoral can exceed first dorsal fin, but not as long as the Albacore tuna. Round body with vertical lines (adults) and strech marks on the belly Big head with big eyes. Yellow finlets with black border.
+                            </li>
+                           
+
+                                    You will find some photos in this page: 
+                    </p>
                     <br />
                     <h4>The things that "makes life easier" in this competition:</h4>
                           <p>
@@ -349,9 +364,81 @@
 
     <hr />
     <h4><b>2. Fish Alignment</b></h4>
-
+           <p>
+           I didn't manage to do the fish alignment as the "Right Whale" challenge has done. Partly because the fish images in this challenge various a lot and sometimes the fish head/tail doesn't always appear
+           simultaneously.
+           (But should we have done it?) --> The classification network simultaneous classify the fish and predict the head and tail location of the fish?
+            </p>
     <hr />
     <h4><b>3. Fish Classification</b></h4>
+        <li> <b>Fine tune Resnet50 for fish classification</b>: 
+              <p>Again, follow the blog post of<a href="https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html">
+                  "Building powerful image classification models using very little data"</a>. Applying this single network for classifying extracted fish from "fish detection" directly, I obtain my 
+                  very first result: 
+              </p>
+                <div class="imgcap">
+                         <img class="fancybox" src="Images/kaggle_fish/pipeline2.PNG" style="width: 95%">
+                         <div class="thecap" style="text-align:center">Overall Pipeline </div>
+              </div>
+               <div class="imgcap">
+                 <img class="fancybox" src="Images/kaggle_fish/ranking0.PNG" style="width: 85%">
+                 <div class="thecap" style="text-align:center">My first submission result(with a very disappointing ranking). </div>
+               </div>
+               
+              <p><b>Clipping</b>: 
+                     A note here that since the evaluation metric here is cross-entropy and it heavily penalises wrongly classified results with high confidence. I use the clipping
+                    <a href="https://www.kaggle.com/sbrugman/the-nature-conservancy-fisheries-monitoring/tricks-for-the-kaggle-leaderboard/notebook">
+                         [1. Log Loss]</a>
+                    <a href="http://www.exegetic.biz/blog/2015/12/making-sense-logarithmic-loss/">
+                         [2. Making Sense of Logarithmic Loss]</a>
+                     for all the prediction as:
+                            <p>     
+                       
+                                 $$
+                                 Pred' = clip(Pred, (1 - mx) / 7, mx)
+                                 $$
+                            </p>
+                    where <i>mx</i> is a clipping variable I heuristically chosen as <i>0.95</i>.
+                      <br/>
+                        <div class="imgcap">
+                         <img class="fancybox" src="Images/kaggle_fish/logloss.PNG" style="width: 35%">
+                         <div class="thecap" style="text-align:center">LogLoss plot </div>
+                       </div>
+                </li> 
+               </p>
+
+           <p><b>Rotation images average</b>: I also rotate the test image 90 degrees fours times and have the averaging prediction.
+            <div class="imgcap">
+                         <img class="fancybox" src="Images/kaggle_fish/rotation2.PNG" style="width: 65%">
+                         <div class="thecap" style="text-align:center">Rotational images could give very different result. </div>
+              </div>
+            </p>
+
+             <p><b>Scaled images average</b>: NOT DONE YET!
+            </p>
+
+        <li> <b>Day/Night boat separation</b>: 
+            <p>
+                From analysing our previous result, I found out that for day time boat when the color hue is "normal", the network can classfy the fish correctly with quite high confidence.
+                However, when there is a yellow-ish hue night boat, the fish classification network unfortunately tends to classify a lot of fish into the "Yellow Fin Tuna (YFT)" category.
+                This is due to limited examples for training the network to be lighting invariant. Hence, I endeavor to design two networks for the day and night light condition fish classifier.
+
+                <div class="imgcap">
+                         <img class="fancybox" src="Images/kaggle_fish/night.PNG" style="width: 65%">
+                         <div class="thecap" style="text-align:center">Incorret labels due to lighting condition (night) </div>
+              </div>
+            </p>
+ 
+       
+
+    <h3><b>A holistic Fish Classification</b></h3> 
+           <p>
+               Albeit rather brute-force, using the whole image as fish classifier has achieve really promising results, sometimes better results:
+                <a href="https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/discussion/30873">[blogpost: Worse performance on cropped images?]</a>
+               I assume it could be due to the following two reasons:
+                <li>(i) <a href="https://www.kaggle.com/anokas/the-nature-conservancy-fisheries-monitoring/finding-boatids/comments">boat leakage:</a>  in this dataset, there is a strong correlation between the boat and the types of fish the boat caught. </li> 
+               <li>(ii) contextual information: the contextual information around the fish could be some valuable resource for the classification of fish. </li> 
+           </p>
 
     <hr />
     <h3>Training details...</h3>
