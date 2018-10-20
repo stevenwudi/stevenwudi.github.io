@@ -35,8 +35,46 @@
         })();
 
     </script>
+    <!-- for maps-->
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 0; padding: 0 }
+        #map-canvas { height: 600px; }
+    </style>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtIFjv_0F7URbkmif4cE2mXjQtwDvDiNY&sensor=false">
+    </script>
+        <script type="text/javascript">
+            function initialize() {
+                var myLatlng = new google.maps.LatLng(22.5331, 113.9328);
+                var mapOptions = {
+                    zoom: 13,
+                    center: myLatlng
+                };
 
-<body>
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: 'Di Wu\'s Office'
+                });
+            }
+
+            function loadScript() {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
+                    'callback=initialize';
+                document.body.appendChild(script);
+            }
+
+            window.onload = loadScript;
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+        </script>
+
+    <body>
     <!-- Mobile-friendly navbar adapted from example. -->
     <!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -83,6 +121,12 @@
 
         </div>
         <hr>
+
+        <!--google map-->
+        <div class="span3 offset3 asset" style="padding-left: 2.5%">
+            <div id="map-canvas" style="width: 500px; height: 500px"></div>
+        </div>
+
         </div>
 
         <div style="text-align:center">
