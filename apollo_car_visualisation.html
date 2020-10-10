@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="author" content="Di Wu"/>
+            <meta name="description" content="DI WU"/>
+            <meta name="keywords" content="Di Wu, Computer Vision, Autonomous Driving, Machine Learning, Computer vision"/>
+            <title>Welcome to Di Wu's home page</title>
+            <link rel="shortcut icon" href="Images/Profile.jpg">
+            <link rel="apple-touch-icon" href="Images/Profile.jpg">
+
+            <!-- Bootstrap-responsive css -->        <!-- Responsive desing--inclusion of the viewport tage-->
+            <!-- Then, within the body, use row-fluid classes within the container class-->
+            <meta name="viewport" content="wiph=device-wiph, initial-scale=1.0">
+            <!-- For the .heading and .subheading class, we use the built-in p.lead
+                from Bootstrap and also import and use paired Google Fonts to make the
+                style look a little less default-->
+            <link href="CSS/ubuntu.css" rel="stylesheet" type="text/css">
+            <link href="CSS/opensans.css" rel="stylesheet" type="text/css">
+
+            <link rel="stylesheet" href="CSS/bootstrap.css">
+            <!-- Saved CSS file -->
+            <link rel="stylesheet" href="CSS/style1.css">
+
+            <script src="lib/jquery-1.8.3.min.js"></script>
+
+            <!-- Google analytics snippet-->
+            <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-46685114-1']);
+                _gaq.push(['_trackPageview']);
+                (function () {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+
+            </script>
+
+            <!-- javescript for news rotator-->
+            <script  type="text/javascript">
+                var headline_count;
+                var headline_interval;
+                var old_headline = 0;
+                var current_headline = 0;
+                $(document).ready(function () {
+                    headline_count = $("div.headline").size();
+                    $("div.headline:eq(" + current_headline + ")").css('top', '5px');
+                    headline_interval = setInterval(headline_rotate, 10000); //time in milliseconds
+                    $('#scrollup').hover(function () {
+                        clearInterval(headline_interval);
+                    }, function () {
+                        headline_interval = setInterval(headline_rotate, 10000); //time in milliseconds
+                        headline_rotate();
+                    });
+                });
+                function headline_rotate() {
+                    current_headline = (old_headline + 1) % headline_count;
+                    $("div.headline:eq(" + old_headline + ")").animate({ top: -205 }, "slow", function () {
+                        $(this).css('top', '210px');
+                    });
+                    $("div.headline:eq(" + current_headline + ")").show().animate({ top: 5 }, "slow");
+                    old_headline = current_headline;
+                }
+            </script>
+
+            <!-- CSS for news rotator-->
+            <style type="text/css">
+                #scrollup { position: relative; overflow: hidden; border: 0px solid #000; height: 80px; width: 1000px }
+                .headline { position: absolute; top: 110px; left: 0px; height: 80px; width:1000px; }
+                #container { position: absolute; top: 110px; left: 0px; height: 80px; width:1000px; }
+                #myCanvas {position: absolute; top: 0px; left: 150px; height: 300px; width:2000px;}
+            </style>
+
+        </head>
+
+<body>
+<!-- Mobile-friendly navbar adapted from example. -->
+<!-- http://twitter.github.io/bootstrap/examples/starter-template.html -->
+
+
+<div id="container">
+    <<img src="Images/mesh_car_3.PNG" height="380" width="500"/>
+    <script src="lib/three.min.js"></script>
+    <script src="lib/OrbitAndPanControls.js"></script>
+    <script type="text/javascript" src="js/car_model.js"></script>
+    <!--<div id="info">Description</div>-->
+</div>
+
+</body>
+
+</html>
+    </title>
+</head>
+<body>
