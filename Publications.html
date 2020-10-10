@@ -68,6 +68,58 @@
     <div class="container">
         <div class="span12 copy row-fluid">
 
+            <div class="row-fluid">
+                <div class="span3 asset">
+                    <img class="img-polaroid" src="Images/kaggle_pku.PNG">
+                </div>
+                <div class="span9 publications">
+                    <div class="paper_title">
+                        Neural Mesh Refiner for 6-DoF Pose Estimation
+                    </div>
+                    <div class="abstract_fig">
+                        How can we effectively utilise the 2D monocular image information for recovering the 6D pose (6-DoF) of the visual objects?
+                        Deep learning has shown to be effective for robust and real-time monocular pose estimation.
+                        Oftentimes, the network learns to regress the 6-DoF pose using a naive loss function.
+                        However, due to a lack of geometrical scene understanding from the directly regressed pose estimation, there are misalignments between the rendered mesh from the 3D object and the 2D instance segmentation result, e.g., bounding boxes and masks prediction.
+                        This paper bridges the gap between 2D mask generation and 3D location prediction via a differentiable neural mesh renderer.
+                        We utilise the overlay between the accurate mask prediction and less accurate mesh prediction to iteratively optimise  the direct regressed 6D pose information with a focus on  translation estimation.
+                        By leveraging geometry, we demonstrate that our technique significantly improves direct regression performance on the difficult task of translation estimation and achieve the state of the art results on Peking University/Baidu - Autonomous Driving dataset and the ApolloScape 3D Car Instance dataset.</div>
+                    <div class="author">
+                        Di Wu, Yihao Chen, Xianbiao Qi, Yongjian Jian, Weixuan Chen, Rong Xiao
+                        <p>arXiv:2003.07561, 2020</p>
+                    </div>
+                </div>
+            </div>
+        <hr>
+
+        <div class="container">
+            <div class="span12 copy row-fluid">
+    
+                <div class="row-fluid">
+                    <div class="span3 asset">
+                        <img class="img-polaroid" src="Images/171206_034636094_Camera_5-min.PNG">
+                    </div>
+                    <div class="span9 publications">
+                        <div class="paper_title">
+                            6D-VNet: End-to-end 6-DoF Vehicle Pose Estimation from Monocular RGB Images
+                        </div>
+                        <div class="abstract_fig">
+                            We present a conceptually simple framework for 6DoF object pose estimation, especially for autonomous driving scenario.
+                            Our approach efficiently detects traffic participants in a monocular RGB image while simultaneously regressing their 3D translation and rotation vectors.
+                            The method, called 6D-VNet, extends Mask R-CNN by adding customised heads for predicting vehicle's finer class, rotation and translation.
+                            The proposed 6D-VNet is trained end-to-end compared to previous methods.
+                            Furthermore, we show that the inclusion of translational regression in the joint losses is crucial for the 6DoF pose estimation task, where object translation distance along longitudinal axis varies significantly, \emph{e.g.}, in autonomous driving scenarios.
+                            Additionally, we incorporate the mutual information between traffic participants via a modified non-local block.
+                            As opposed to the original non-local block implementation, the proposed weighting modification takes the spatial neighbouring information into consideration whilst counteracting the effect of extreme gradient values.
+                        </div>
+                            <div class="author">
+                                Di Wu, Zhaoyong Zhuang, Xiangqun Can, Wenbin Zou, Xia Li
+                                <p>IEEE Conference on Computer Vision and Pattern Recognition workshop, 2019</p>
+                            </div>
+                    </div>
+                </div>
+            <hr>
+
         <div class="row-fluid">
                 <div class="span3 asset">
                     <img class="img-polaroid" src="Images/system_architecture.PNG">
