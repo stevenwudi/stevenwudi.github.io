@@ -1,4 +1,4 @@
-import { SplitText as ST } from './vendors/gsap/SplitText.js'
+//import { SplitText as ST } from './vendors/gsap/SplitText.js'
 import { wrap, unwrap, ev } from './utils/utils.js'
 
 export default class DetailView {

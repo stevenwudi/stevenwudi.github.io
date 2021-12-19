@@ -1,6 +1,6 @@
 import * as THREE from '../../lib/three.module.js'
 // import Scrollbar from './lib/smooth-scrollbar.js'
-import { SplitText as ST } from './vendors/gsap/SplitText.js'
+//import { SplitText as ST } from './vendors/gsap/SplitText.js'
 import { clamp, getRatio, wrap, ev } from './utils/utils.js'
 
 
