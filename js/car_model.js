@@ -3,6 +3,7 @@
 // Smooth shading exercise: change program to make sphere look smooth
 ////////////////////////////////////////////////////////////////////////////////
 /*global THREE, window, document, $*/
+// import * as THREE from '../lib/three.module.js';
 
 var camera, scene, renderer;
 var cameraControls;
@@ -28,10 +29,10 @@ function init() {
     renderer.setSize(window.innerWidth/1.2, window.innerHeight/1.3);
     //renderer.setSize(800, 800);
 
-
     var container = document.getElementById('container');
     container.appendChild( renderer.domElement );
 
+    console.log("Success")
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
 
@@ -59,8 +60,9 @@ function fillScene() {
         // onLoad callback
         function ( geometry) {
             mesh = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial());
-            mesh.position.y += 200;
-            mesh.position.x += 600;
+            mesh.position.y += 0;
+            mesh.position.x += 0;
+            console.log(mesh.position.x)
             scene.add( mesh );
         },
 
@@ -96,7 +98,7 @@ function render() {
     cameraControls.update(delta);
 
     renderer.render( scene, camera );
-    if (frame > 1) {
+    if (frame > 100) {
         if (mesh.position.y >= -200) {
             mesh.position.y -= 1;
             mesh.position.z += 1;

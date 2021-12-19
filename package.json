@@ -1,0 +1,8 @@
+{
+  "name": "stevenwudi.github.io",
+  "version": "1.0.0",
+  "dependencies": {
+    "gasp": "^0.0.2",
+    "gsap": "^3.9.0"
+  }
+}
