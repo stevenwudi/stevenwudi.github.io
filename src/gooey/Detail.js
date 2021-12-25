@@ -1,5 +1,5 @@
-//import { SplitText as ST } from './vendors/gsap/SplitText.js'
 import { wrap, unwrap, ev } from './utils/utils.js'
+import { SplitText as ST } from './vendors/gsap/SplitText.js'
 
 export default class DetailView {
 
@@ -37,12 +37,12 @@ export default class DetailView {
             wrap(l, div)
         })
 
-        TM.to(pageTitle, 0.5, {
+        gsap.to(pageTitle, 0.5, {
             alpha: 0,
             force3D: true,
         })
 
-        TM.fromTo(this.$els.closeBtn, 0.5, {
+        gsap.fromTo(this.$els.closeBtn, 0.5, {
             rotate: -45,
             scale: 0,
             alpha: 0,
@@ -54,10 +54,13 @@ export default class DetailView {
             force3D: true,
         })
 
-        TM.staggerFromTo(this.stgs.lines, 0.8, {
-            yPercent: 100,
-        }, {
+        gsap.to(this.stgs.lines,
+            0.8,
+            {
             yPercent: 0,
+            },
+            {
+            yPercent: 100,
             ease: Power3.easeInOut,
             force3D: true,
         }, 0.5 / this.stgs.lines.length)
@@ -68,21 +71,23 @@ export default class DetailView {
     onClose() {
         const { title: pageTitle } = APP.Stage.$els
 
-        TM.to(pageTitle, 0.5, {
+        gsap.to(pageTitle, 0.5, {
             alpha: 0.1,
             force3D: true,
         })
 
-        TM.staggerTo(this.stgs.lines, 0.8, {
+        gsap.to(this.stgs.lines, 0.8, {
             yPercent: 100,
             ease: Power3.easeInOut,
             force3D: true,
-        }, 0.5 / this.stgs.lines.length, () => {
+        }, 0.5 / this.stgs.lines.length)
+
+        setTimeout(() => {
             this.onToggleView(false)
             unwrap(this.stgs.lines)
-        })
+        }, 800)
 
-        TM.to(this.$els.closeBtn, 0.5, {
+        gsap.to(this.$els.closeBtn, 0.5, {
             rotate: -45,
             scale: 0,
             alpha: 0,
@@ -90,7 +95,7 @@ export default class DetailView {
             force3D: true,
         })
 
-        TM.delayedCall(0.3, () => {
+        gsap.delayedCall(0.3, () => {
             ev('toggleDetail', {
                 open: false,
                 force: true,

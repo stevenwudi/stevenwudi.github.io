@@ -1,7 +1,4 @@
-// import Scrollbar from './lib/smooth-scrollbar.js'
-// import OverscrollPlugin from './lib/overscroll.js'
 import { map } from './utils/utils.js'
-
 import Scene from './Scene.js'
 import HorizontalScrollPlugin from './utils/HorizontalScrollPlugin.js'
 

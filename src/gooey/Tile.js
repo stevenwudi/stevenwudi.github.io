@@ -1,6 +1,6 @@
-import * as THREE from '../../lib/three.module.js'
+import * as THREE from '../../../utils/threejs/build/three.module.js'
 // import Scrollbar from './lib/smooth-scrollbar.js'
-//import { SplitText as ST } from './vendors/gsap/SplitText.js'
+import { SplitText } from './vendors/gsap/SplitText.js'
 import { clamp, getRatio, wrap, ev } from './utils/utils.js'
 
 
@@ -40,7 +40,7 @@ export default class Tile {
         this.isZoomed = false
 
         this.loader = new THREE.TextureLoader()
-        this.preload([this.mainImage.src, this.mainImage.dataset.hover, '/dist/img/shape.jpg'], () => { this.initTile() })
+        this.preload([this.mainImage.src, this.mainImage.dataset.hover, '../assets/images/FITURE/shapeF3.jpg'], () => { this.initTile() })
 
         this.Scroll = Scrollbar.get(document.querySelector('.scrollarea'))
 
@@ -63,6 +63,14 @@ export default class Tile {
 
     /* Handlers
     --------------------------------------------------------- */
+
+//     ele.addeventlistener('gesture_onclick', (data)=>{
+//         log(data)
+// })
+//
+// window.dispatchEvent('custom', {detail:{
+//
+//     }})
 
     onClick(e) {
         e.preventDefault()
@@ -91,8 +99,7 @@ export default class Tile {
 
         if (!this.mesh) return
 
-        gsap.to(this.uniforms.u_progressHover, {
-            duration: this.duration,
+        gsap.to(this.uniforms.u_progressHover, this.duration, {
             value: 1,
             ease: Power2.easeInOut,
         })
@@ -101,8 +108,7 @@ export default class Tile {
     onPointerLeave() {
         if (!this.mesh || this.isZoomed || this.hasClicked || APP.Layout.isMobile) return
 
-        gsap.to(this.uniforms.u_progressHover, {
-            duration: this.duration,
+        gsap.to(this.uniforms.u_progressHover, this.duration,{
             value: 0,
             ease: Power2.easeInOut,
             onComplete: () => {
@@ -127,8 +133,7 @@ export default class Tile {
     onMouseMove(event) {
         if (this.isZoomed || this.hasClicked || APP.Layout.isMobile) return
 
-        gsap.to(this.mouse,  {
-            duratio: 0.5,
+        gsap.to(this.mouse,  0.5, {
             x: event.clientX,
             y: event.clientY,
         })
@@ -139,7 +144,7 @@ export default class Tile {
     --------------------------------------------------------- */
 
     initTile() {
-        this.stgs = new ST(this.$els.text, { type: 'lines', linesClass: 'line' })
+        this.stgs = new SplitText(this.$els.text, { type: 'lines', linesClass: 'line' })
 
         this.stgs.lines.forEach((l) => {
             const div = document.createElement('div')
@@ -195,12 +200,12 @@ export default class Tile {
         if (!this.mesh || this.isZoomed || this.hasClicked) return
         this.getBounds()
 
-        TM.set(this.mesh.position, {
+        gsap.set(this.mesh.position, {
             x: this.offset.x,
             y: this.offset.y,
         })
 
-        TM.to(this.mesh.scale, 0.3, {
+        gsap.to(this.mesh.scale, 0.3, {
             x: this.sizes.x - this.delta,
             y: this.sizes.y - this.delta,
             z: 1,
@@ -239,14 +244,14 @@ export default class Tile {
 
         this.hide(!shouldZoom, !open)
 
-        TM.to(this.uniforms.u_progressClick, 1.2, {
+        gsap.to(this.uniforms.u_progressClick, 1.2, {
             value: shouldZoom ? 1 : 0,
             ease: Power2.easeInOut,
             onComplete: () => {
                 this.isZoomed = shouldZoom
                 this.hasClicked = open
 
-                TM.to(this.uniforms.u_progressHover, this.duration, {
+                gsap.to(this.uniforms.u_progressHover, this.duration, {
                     value: shouldZoom ? 1 : 0,
                     ease: Power2.easeInOut,
                 })
@@ -255,7 +260,7 @@ export default class Tile {
             },
         })
 
-        TM.to(this.mesh.scale, 1.2, {
+        gsap.to(this.mesh.scale, 1.2, {
             delay,
             x: newScl.x,
             y: newScl.y,
@@ -263,37 +268,40 @@ export default class Tile {
             onUpdate: () => { this.getBounds() },
         })
 
-        TM.to(this.mesh.position, 1.2, {
+        gsap.to(this.mesh.position, 1.2, {
             delay,
             x: newPos.x,
             y: newPos.y,
             ease: Expo.easeInOut,
         })
 
-        TM.to(this.uniforms.u_hoverratio.value, 1.2, {
+        gsap.to(this.uniforms.u_hoverratio.value, 1.2, {
             delay,
             x: newRatio.x,
             y: newRatio.y,
             ease: Expo.easeInOut,
         })
 
-        TM.staggerTo(this.stgs.lines, 1, {
+        gsap.to(this.stgs.lines, {
+            duration: 1,
             yPercent: shouldZoom ? 100 : 0,
             ease: Expo.easeInOut,
             force3D: true,
+            stagger: 0.8
         }, 0.35 / this.stgs.lines.length)
+
     }
 
 
     hide(shouldHide, force) {
         const delay = shouldHide && !force ? 0 : 1.2
-        TM.to(this.uniforms.u_alpha, 0.5, {
+        gsap.to(this.uniforms.u_alpha, 0.5, {
             delay,
             value: shouldHide && !force ? 0 : 1,
             ease: Power3.easeIn,
         })
 
-        TM.to(this.$els.el, 0.5, {
+        gsap.to(this.$els.el, 0.5, {
             delay,
             alpha: shouldHide && !force ? 0 : 1,
             force3D: true,

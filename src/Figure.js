@@ -1,6 +1,5 @@
-import * as THREE from '../lib/three.module.js'
-// import vertexShader from './glsl/vertexShader.glsl'
-// import fragmentShader from './glsl/fragmentShader.glsl'
+import * as THREE from '../../utils/threejs/build/three.module.js'
+
 
 
 export default class Figure {

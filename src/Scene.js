@@ -1,4 +1,4 @@
-import * as THREE from '../lib/three.module.js'
+import * as THREE from '../../utils/threejs/build/three.module.js'
 import Figure from './Figure.js'
 
 const perspective = 800

@@ -1,4 +1,5 @@
-import * as THREE from '../../lib/three.module.js'
+import * as THREE from '../../../utils/threejs/build/three.module.js'
+
 import Tile from './Tile.js'
 import DetailView from './Detail.js'
 import { ev } from './utils/utils.js'
@@ -15,10 +16,10 @@ let revealShader = await (await fetch('./src/glsl/revealShader.glsl')).text()
 const shaders = [
 
     trippyShader,
-    shapeShader,
     gooeyShader,
     waveShader,
     revealShader,
+    shapeShader,
 ]
 
 const durations = [
@@ -103,6 +104,7 @@ export default class Scene {
 
     onToggleView({ target, open }) {
         this.activeTile = target // !== undefined ? target : this.activeTile
+        // this.activeTile !== undefined ? target : this.activeTile
 
         ev('lockScroll', { lock: open })
         ev('tile:zoom', { tile: this.activeTile, open })

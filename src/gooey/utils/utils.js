@@ -1,4 +1,4 @@
-import * as THREE from '../../../lib/three.module.js'
+import * as THREE from '../../../../utils/threejs/build/three.module.js'
 
 // eslint-disable-next-line import/prefer-default-export
 export const clamp = (val, min = 0, max = 1) => Math.max(min, Math.min(max, val))

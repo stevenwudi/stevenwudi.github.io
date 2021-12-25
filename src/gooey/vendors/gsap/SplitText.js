@@ -13,6 +13,10 @@
 
 // import { _gsScope, globals } from "gsap/TweenLite.js";
 
+var _gsScope = (typeof module !== "undefined" && module.exports && typeof global !== "undefined") ? global : this || window;
+var globals = (typeof module !== "undefined" && module.exports && typeof global !== "undefined") ? global : this || window;
+
+
 (function(window) {
 	
 	"use strict";
