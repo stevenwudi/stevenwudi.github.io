@@ -451,6 +451,7 @@ body {
     min-height: 100vh;
     opacity: 0;
     pointer-events: none;
+    height: 100vh;
 }
 .detail-view.is-interactive {
     pointer-events: all;

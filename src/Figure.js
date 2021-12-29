@@ -61,7 +61,6 @@ export default class Figure {
 
 
         this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1)
-        //this.material = new THREE.MeshBasicMaterial({map: this.image})
 
         let vertexShader = await (await  fetch('./src/glsl_demo/vertexShader.glsl')).text()
         let fragmentShader = await (await fetch('./src/glsl_demo/fragmentShader.glsl')).text()

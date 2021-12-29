@@ -69,7 +69,7 @@ export default class Scene {
         this.renderer.setSize(this.W, this.H)
         this.renderer.setPixelRatio(window.devicePixelRatio)
 
-        this.tiles = Array.from(this.$tiles).map(($el, i) => new Tile($el, this, durations[i], shaders[i]))
+        this.tiles = Array.from(this.$tiles).map(($el, i) => new Tile($el, this, durations[i], shaders[i], i))
 
         this.update()
     }
@@ -86,12 +86,8 @@ export default class Scene {
         this.mainScene.add(ambientlight)
     }
 
-
-
-
     /* Handlers
     --------------------------------------------------------- */
-
     onResize() {
         this.W = window.innerWidth
         this.H = window.innerHeight
@@ -103,16 +99,14 @@ export default class Scene {
     }
 
     onToggleView({ target, open }) {
+        console.log(target, open)
         this.activeTile = target // !== undefined ? target : this.activeTile
-        // this.activeTile !== undefined ? target : this.activeTile
-
         ev('lockScroll', { lock: open })
         ev('tile:zoom', { tile: this.activeTile, open })
     }
 
     /* Actions
     --------------------------------------------------------- */
-
     update() {
         requestAnimationFrame(this.update.bind(this))
 

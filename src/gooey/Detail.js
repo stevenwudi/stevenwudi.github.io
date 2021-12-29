@@ -4,9 +4,10 @@ import { SplitText as ST } from './vendors/gsap/SplitText.js'
 export default class DetailView {
 
     constructor() {
+        this.index = 0
         this.$els = {
-            el: document.querySelector('.detail-view'),
-            closeBtn: document.querySelector('.close-detail'),
+            el: document.querySelectorAll('.detail-view')[this.index],
+            closeBtn: document.querySelectorAll('.close-detail')[this.index],
             title: document.querySelector('.detail-view__title'),
         }
 
@@ -69,6 +70,7 @@ export default class DetailView {
     }
 
     onClose() {
+        console.log(2323)
         const { title: pageTitle } = APP.Stage.$els
 
         gsap.to(pageTitle, 0.5, {
@@ -96,6 +98,7 @@ export default class DetailView {
         })
 
         gsap.delayedCall(0.3, () => {
+            console.log('2')
             ev('toggleDetail', {
                 open: false,
                 force: true,
@@ -103,9 +106,16 @@ export default class DetailView {
         })
     }
 
-    toggleReveal({ shouldOpen, target }) {
+    toggleReveal({ shouldOpen, target, index }) {
         if (!shouldOpen) return
 
+        console.log(this, this.$els)
+
+        this.index = index
+        this.$els.el = document.querySelectorAll('.detail-view')[index]
+        this.$els.closeBtn = document.querySelectorAll('.close-detail')[index]
+        console.log(this.$els.closeBtn)
+        this.$els.closeBtn.addEventListener('click', () => { this.onClose() })
         this.$els.title.innerText = target.$els.title
         this.onOpen()
     }

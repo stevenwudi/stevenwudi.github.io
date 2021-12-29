@@ -9,8 +9,9 @@ let vertexShader = await (await  fetch('./src/glsl/vertexShader.glsl')).text()
 
 export default class Tile {
 
-    constructor($el, scene, duration, fragmentShader) {
+    constructor($el, scene, duration, fragmentShader, index) {
         this.scene = scene
+        this.index = index
         this.$els = {
             body: document.body,
             el: $el,
@@ -44,11 +45,11 @@ export default class Tile {
 
         this.Scroll = Scrollbar.get(document.querySelector('.scrollarea'))
 
-        this.bindEvent()
+        this.bindEvent(index)
     }
 
-    bindEvent() {
-        document.addEventListener('tile:zoom', ({ detail }) => { this.zoom(detail) })
+    bindEvent(index) {
+        document.addEventListener('tile:zoom', ({ detail }) => { this.zoom({...detail, index}) })
 
 
         window.addEventListener('resize', () => { this.onResize() })
@@ -225,7 +226,7 @@ export default class Tile {
         this.uniforms.u_time.value += this.clock.getDelta()
     }
 
-    zoom({ tile, open }) {
+    zoom({ tile, open, index }) {
         const shouldZoom = tile === this
 
         const newScl = {
@@ -256,7 +257,7 @@ export default class Tile {
                     ease: Power2.easeInOut,
                 })
 
-                ev('view:toggle', { shouldOpen: shouldZoom, target: this })
+                ev('view:toggle', { shouldOpen: shouldZoom, target: this, index })
             },
         })
 
