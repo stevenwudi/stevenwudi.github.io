@@ -7,19 +7,21 @@ import { ev } from './utils/utils.js'
 const perspective = 800
 
 let trippyShader = await (await  fetch('./src/glsl/trippyShader.glsl')).text()
+let revealShader = await (await fetch('./src/glsl/revealShader.glsl')).text()
 let shapeShader = await (await fetch('./src/glsl/shapeShader.glsl')).text()
 let gooeyShader = await (await fetch('./src/glsl/gooeyShader.glsl')).text()
 let waveShader = await (await fetch('./src/glsl/waveShader.glsl')).text()
-let revealShader = await (await fetch('./src/glsl/revealShader.glsl')).text()
+
 
 
 const shaders = [
 
     trippyShader,
-    gooeyShader,
-    waveShader,
     revealShader,
     shapeShader,
+    gooeyShader,
+    waveShader,
+
 ]
 
 const durations = [
