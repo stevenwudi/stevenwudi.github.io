@@ -18,13 +18,30 @@
     <script src="./src/gooey/lib/smooth-scrollbar.js"></script>
     <script src="./src/gooey/lib/plugins/overscroll.js"></script>
 
+        <!-- CSS for bublle rotator-->
+        <style>    
+        #myCanvas {
+            position: absolute;
+            top: -20px;
+            left: -300px;
+            height: 300px;
+            width: 2000px;
+        }
+        </style>
 </head>
 
 <body class="demo-2">
+
+    
     <main>
         <h1 class="page-title | title">吴迪 <span class="slideshow__title__offset | title__offset">Dr. Di Wu</span>
         </h1>
         <section class="content | scrollarea-ctn">
+            <canvas id="myCanvas"></canvas>
+            <script src="lib/jquery-1.8.3.min.js"></script>
+            <script type="text/javascript" src="js/alphabet.js"></script>
+            <script type="text/javascript" src="js/bubbles.js"></script>
+            <script type="text/javascript" src="js/bubbleName.js"></script>
             <div class="scrollarea | slideshow">
                 <ul class="slideshow-list">
                     <li class="slideshow-list__el">
