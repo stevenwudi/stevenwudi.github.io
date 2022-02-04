@@ -44,6 +44,7 @@ export default class Tile {
         this.preload([this.mainImage.src, this.mainImage.dataset.hover, '../assets/images/FITURE/google_scholar.png'], () => { this.initTile() })
 
         this.Scroll = Scrollbar.get(document.querySelector('.scrollarea'))
+        this.canvas = document.getElementById('myCanvas');
 
         this.bindEvent(index)
     }
@@ -62,16 +63,6 @@ export default class Tile {
         this.Scroll.addListener((s) => { this.onScroll(s) })
     }
 
-    /* Handlers
-    --------------------------------------------------------- */
-
-//     ele.addeventlistener('gesture_onclick', (data)=>{
-//         log(data)
-// })
-//
-// window.dispatchEvent('custom', {detail:{
-//
-//     }})
 
     onClick(e) {
         e.preventDefault()
@@ -85,6 +76,14 @@ export default class Tile {
         ev('toggleDetail', {
             open: true,
             target: this,
+        })
+
+
+
+        gsap.to(this.canvas, 0.5, {
+            delay: 1.2,
+            alpha:  0,
+            force3D: true,
         })
     }
 
@@ -307,7 +306,14 @@ export default class Tile {
             alpha: shouldHide && !force ? 0 : 1,
             force3D: true,
         })
-    }
+
+
+        gsap.to(this.canvas, 0.5, {
+            delay: 1.5,
+            alpha: shouldHide && !force ? 0 : 1,
+            force3D: true,
+        })
+        }
 
 
     /* Values
