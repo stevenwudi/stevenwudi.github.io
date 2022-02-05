@@ -80,7 +80,7 @@ export default class Tile {
 
 
 
-        gsap.to(this.canvas, 0.5, {
+        gsap.to(this.canvas, 1.2, {
             delay: 1.2,
             alpha:  0,
             force3D: true,
@@ -308,10 +308,10 @@ export default class Tile {
         })
 
 
-        gsap.to(this.canvas, 0.5, {
+        gsap.to(this.canvas, 1.5, {
             delay: 1.5,
             alpha: shouldHide && !force ? 0 : 1,
-            force3D: true,
+            // force3D: true,
         })
         }
 
