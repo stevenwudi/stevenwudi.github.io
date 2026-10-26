@@ -1,0 +1,8 @@
+# dependencies & build output
+node_modules/
+dist/
+.astro/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
