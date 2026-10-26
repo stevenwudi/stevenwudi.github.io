@@ -1,0 +1,293 @@
+---
+layout: ../../layouts/Note.astro
+title: Finding fish on fishing boats
+description: My approach to Kaggle’s Nature Conservancy Fisheries Monitoring challenge — a fully convolutional ResNet-50 fish detector, then a classifier on the crops.
+pubDate: 2017-01-23
+updatedDate: 2017-02-17
+---
+
+import Figure from '../../components/Figure.astro';
+import Formula from '../../components/Formula.astro';
+import gtDemo from '../../assets/notes/kaggle-fisheries/gt-demo.jpg';
+import headTail from '../../assets/notes/kaggle-fisheries/head-tail-demo.jpg';
+import multiscaleLarge from '../../assets/notes/kaggle-fisheries/multiscale-img-01646.jpg';
+import multiscaleSmall from '../../assets/notes/kaggle-fisheries/multiscale-img-03652.jpg';
+import outMean from '../../assets/notes/kaggle-fisheries/out-mean.jpg';
+import attentionMap from '../../assets/notes/kaggle-fisheries/attention-map.png';
+import outMeanAttention from '../../assets/notes/kaggle-fisheries/out-mean-attention.jpg';
+import starExample from '../../assets/notes/kaggle-fisheries/img-04004.jpg';
+import boxes from '../../assets/notes/kaggle-fisheries/bb-img-03547.jpg';
+import pipeline from '../../assets/notes/kaggle-fisheries/pipeline2.jpg';
+import ranking from '../../assets/notes/kaggle-fisheries/ranking0.png';
+import logloss from '../../assets/notes/kaggle-fisheries/logloss.png';
+import rotation from '../../assets/notes/kaggle-fisheries/rotation2.jpg';
+import night from '../../assets/notes/kaggle-fisheries/night.jpg';
+
+<div class="article__note">
+  Written in early 2017 while the competition was running, and edited for clarity for this site. A few images that
+  were hosted by Kaggle are no longer online and have been removed.
+</div>
+
+> “Nearly half of the world depends on seafood for their main source of protein. In the Western and Central Pacific,
+> where 60% of the world’s tuna is caught, illegal, unreported, and unregulated fishing practices are threatening marine
+> ecosystems, global seafood supplies and local livelihoods. The Nature Conservancy is working with local, regional and
+> global partners to preserve this fishery for the future.”
+>
+> — from the [competition page](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring)
+
+## The goal: how likely is each species in every picture?
+
+### Submission and evaluation
+
+Submissions are evaluated with the **multi-class logarithmic loss**. Each image has been labelled with **one** true
+class, and for each image you submit a predicted probability for every class. The formula is
+
+<Formula display tex={String.raw`\text{logloss} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{j=1}^{M} y_{ij} \log\left(p_{ij}\right)`} />
+
+### Target categories
+
+Eight categories are available: **albacore tuna, bigeye tuna, yellowfin tuna, mahi-mahi, opah, sharks, other** (there
+are fish, but not of the above kinds) and **no fish** (no fish in the picture).
+
+### What makes it hard
+
+**Imbalanced fish types.** Table 1 lists the number of images per type. For the detection pipeline and the
+classification pipeline alike, it is crucial to have a roughly balanced number of images per type — otherwise the
+network ends up biased towards certain fish (albacore, here) and the cute moonfish gets biased against.
+
+<div class="table-wrap">
+  <table>
+    <caption>Table 1. Number of training images per fish type.</caption>
+    <thead>
+      <tr><th scope="col">Code</th><th scope="col">Fish</th><th scope="col">Images</th><th scope="col">Share</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ALB</td><td>Albacore tuna</td><td>1,719</td><td>44.35%</td></tr>
+      <tr><td>BET</td><td>Bigeye tuna</td><td>200</td><td>5.16%</td></tr>
+      <tr><td>DOL</td><td>Dolphinfish (mahi-mahi)</td><td>117</td><td>3.02%</td></tr>
+      <tr><td>LAG</td><td>Opah (moonfish)</td><td>67</td><td>1.73%</td></tr>
+      <tr><td>SHARK</td><td>Various sharks</td><td>176</td><td>4.54%</td></tr>
+      <tr><td>YFT</td><td>Yellowfin tuna</td><td>734</td><td>18.94%</td></tr>
+      <tr><td>OTHER</td><td>Other fish</td><td>299</td><td>7.71%</td></tr>
+      <tr><td>NoF</td><td>No fish</td><td>564</td><td>14.55%</td></tr>
+      <tr><th scope="row">Total</th><td></td><td>3,876</td><td>100%</td></tr>
+    </tbody>
+  </table>
+</div>
+
+**Varied lighting.** Day and night shots from the boats’ cameras look very different — more on that
+[below](#day-night).
+
+**Similar species — albacore vs bigeye** ([photos](https://web.archive.org/web/20190105015541/http://fishidentificationblog.blogspot.com/p/tuna-species.html)):
+
+- **Albacore tuna:** an extremely long pectoral (side) fin that can reach past the first dorsal fin, up to the anal fin
+  near the tail; a very dark upper body; a bright silver belly without vertical or horizontal lines; black finlets
+  between the second dorsal fin and the tail.
+- **Bigeye tuna:** the pectoral fin can pass the first dorsal fin, but is not as long as the albacore’s; a round body
+  with vertical lines (adults) and stretch marks on the belly; a big head with big eyes; yellow finlets with a black
+  border.
+
+### What makes it easier
+
+**One fish per image.** Each image contains only one fish category — apart from the occasional very small fish used as
+bait.
+
+## The pipeline
+
+### 1. Fish detection
+
+**Collecting images.** Thanks to the collective effort of Kagglers, we had
+[rectangular bounding-box](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25902/complete-bounding-box-annotation)
+and [mouth-and-tail](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/forums/t/25565/annotated-mouth-and-tail)
+annotations from the very beginning, made with the annotation tool [sloth](https://github.com/cvhciKIT/sloth). Because
+different people annotated, the mouth and tail can fall outside the rectangular box. For every annotated fish I also
+extract around ten background patches of the same size that do not overlap the fish.
+
+<Figure
+  src={[gtDemo, headTail]}
+  alt={[
+    'The sloth annotation tool showing a boat-deck photo with a red bounding box around a fish.',
+    'The same photo with the fish’s mouth and tail marked as two points.',
+  ]}
+>
+  Annotations for the shark in img_01307. Left: rectangular bounding box. Right: mouth-and-tail annotation.
+</Figure>
+
+**Training a bottleneck CNN.** I went back to the good old HOG + SVM sliding-window approach from pedestrian detection:
+collect positive fish images and negative background (boat) images, following
+[Building powerful image classification models using very little data](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html).
+These are still natural images, so a network pretrained on ImageNet works directly, with a logistic regressor trained on
+top of the last convolutional layer. The average fish is about 180 × 180 pixels, but Keras’ ResNet-50 needs inputs larger
+than 197 × 197, so I always upsize the detector’s input to 200 × 200.
+
+- **VGG19.** I started with Keras’ pretrained VGG19; after 50 epochs (~100 seconds) the logistic regression reaches:
+
+  ```text
+  32716/32716 [==========] - 2s - loss: 0.0485 - acc: 0.9970 - val_loss: 0.1134 - val_acc: 0.9925
+  ```
+
+- **ResNet-50.** As in the blog post above, ResNet’s last pooling layer gives features that generalise better:
+
+  ```text
+  32716/32716 [==========] - 1s - loss: 1.1921e-07 - acc: 1.0000 - val_loss: 0.0465 - val_acc: 0.9956
+  ```
+
+So ResNet-50 extracts the convolutional features for the rest of the experiments.
+
+**Hard negative mining**, following the HOG + SVM pedestrian-detection pipeline.
+
+**Fine-tuning the convolutional layers.** Next, the ResNet’s convolutional layers are fine-tuned, with data augmentation
+added to the binary detector:
+
+```python
+ImageDataGenerator(rescale=1.,
+                   featurewise_center=True,
+                   shear_range=0.2,
+                   zoom_range=0.2,
+                   rotation_range=360,
+                   horizontal_flip=True)
+```
+
+Training accuracy is much lower than for the bottleneck network because of the augmentation, and with every
+convolutional layer being tuned, training takes considerably longer:
+
+```text
+11206/11206 [==========] - 527s - loss: 0.1217 - acc: 0.9580 - val_loss: 0.0295 - val_acc: 0.9898
+```
+
+**A fully convolutional detector.** Turning fully connected layers into convolutions was proposed by
+[Sermanet et al. 2014](#ref-overfeat) and popularised by [Long et al. 2015](#ref-fcn). Converting the last layer before
+pooling (a softmax layer) turns the trained binary fish classifier into a fully convolutional network (FCN), whose
+output is a heat map of whether each 56 × 56 grid cell holds a fish.
+
+**Multi-scale detection.** Each output cell covers 56 × 56 pixels and fish vary a lot in size, so I run the FCN over
+several scales of the test image. The detector was trained on 200 × 200 inputs with fish of about 180 × 180, so I start
+from the original image size and scale it up by 1.1 eight times: nine response maps, from scale 1 to 1.1⁸ ≈ 2.14. As
+the [illustrations below](#multiscale) show, for a large fish (top) the smaller-scale maps respond more confidently,
+whereas for a small fish (bottom) the upscaled maps respond more strongly at the fish’s location.
+
+<Figure
+  id="multiscale"
+  src={[multiscaleLarge, multiscaleSmall]}
+  alt={[
+    'A large fish on deck and its detector response maps at three scales.',
+    'A small fish on deck and its detector response maps at three scales.',
+  ]}
+>
+  Response maps for different input sizes, upscaled to the original image size. For a larger fish (top) the smaller-scale
+  map gives the stronger confidence; for a smaller fish (bottom) the upscaled maps do.
+</Figure>
+
+**Attention map.** Some areas near the image border respond very strongly because parts of the ship resemble the
+outline of a fish. I designed a heuristic attention map that damps the response near the left, right and top borders —
+but not the bottom, since salient objects can appear at the bottom of the frame but rarely at the top (the sky, for
+example). The [figure](#attention-map) shows it cleaning up false positives.
+
+<Figure
+  id="attention-map"
+  src={[outMean, attentionMap, outMeanAttention, starExample]}
+  alt={[
+    'Original detector response map.',
+    'Attention mask that darkens the left, right and top borders.',
+    'Response map after applying the attention mask.',
+    'Boat-deck photo with a red star on the corrected most-confident point.',
+  ]}
+>
+  From left to right: (1) the original response map; (2) the attention mask; (3) the filtered response map; (4) with the
+  original map, the most confident point (red dot) lands near the top of the image; with the attention map, the red star
+  gets the higher salience score.
+</Figure>
+
+**From response maps to boxes.** Knowing that each image holds only one fish category, I take the maximum response as
+the centre of the fish, keep the connected region above a **multiplying threshold**, and expand it by a **factor**. A
+grid search using **intersection over union (IoU)** set the threshold to 0.4 and the expansion factor to 1.4. (A side
+note: in this IoU the predicted area counts only half, because slightly larger boxes help capture the whole fish — for
+fine-grained classification the details matter, and we want each detected fish to be as complete as possible.)
+
+<Figure src={boxes} alt="A detector response map, the selected region as a mask, and the resulting crop of the test image.">
+  Response map, selected region and resulting crop for img_03547.
+</Figure>
+
+**Evaluating detection.** In **PASCAL VOC**, the highest-confidence box with 50% overlap counts as correct and all others
+as wrong; [Hoiem et al. 2012](#ref-hoiem) analyse detection errors in detail. Here I relaxed the criterion so that 30%
+overlap counts as a correct detection.
+
+### 2. Fish alignment
+
+I didn’t manage to align the fish the way the “Right Whale” challenge did, partly because the fish vary a lot here and
+the head and tail don’t always appear together. (Should we have? Perhaps a network could classify the fish and predict
+its head and tail locations at the same time.)
+
+### 3. Fish classification
+
+**Fine-tuning ResNet-50.** Again following
+[Building powerful image classification models using very little data](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html),
+applying a single network directly to the fish extracted by the detector gave my very first result:
+
+<Figure
+  src={pipeline}
+  alt="Four panels: the boat image, its response map, the selected fish region, and the classified fish crop."
+>
+  The overall pipeline.
+</Figure>
+
+<Figure src={ranking} alt="Leaderboard row: rank 1042 for stevenwudi with a score of 1.37722.">
+  My first submission — with a rather disappointing ranking.
+</Figure>
+
+**Clipping.** The metric is cross-entropy, which punishes confident mistakes heavily, so I clip every prediction
+([log loss tricks](https://www.kaggle.com/sbrugman/the-nature-conservancy-fisheries-monitoring/tricks-for-the-kaggle-leaderboard/notebook),
+[making sense of logarithmic loss](https://web.archive.org/web/20181219165431/http://www.exegetic.biz/blog/2015/12/making-sense-logarithmic-loss/)):
+
+<Formula display tex={String.raw`\mathrm{Pred}' = \operatorname{clip}\left(\mathrm{Pred},\ \frac{1 - m_x}{7},\ m_x\right)`} />
+
+where <Formula tex="m_x" /> is a clipping variable, chosen heuristically as 0.95.
+
+<Figure src={logloss} alt="Log loss falling steeply from about 5 towards 0 as the predicted probability rises from 0 to 1." narrow>
+  Log loss against the probability predicted for the true class.
+</Figure>
+
+**Averaging over rotations.** I also rotate each test image by 90° four times and average the predictions.
+
+<Figure src={rotation} alt="Four rotations of the same fish crop, labelled with different predicted species and confidences.">
+  Rotated copies of an image can give very different results.
+</Figure>
+
+<h3 id="day-night">Day and night boats</h3>
+
+Looking at the results, daytime boats with a “normal” colour cast are classified correctly and with high confidence. On
+night boats, with their yellowish cast, the classifier tends to put many fish into the yellowfin tuna (YFT) category —
+there are too few examples for the network to learn invariance to lighting. So I set out to train separate classifiers
+for day and night conditions.
+
+<Figure src={night} alt="Four night-time fish crops with a yellow cast and their predicted labels, mostly yellowfin tuna.">
+  Incorrect labels caused by night-time lighting.
+</Figure>
+
+## A holistic classifier
+
+Albeit rather brute force, classifying the whole image works surprisingly well — sometimes better than the crops
+([discussion: worse performance on cropped images?](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/discussion/30873)).
+I suspect two reasons:
+
+1. [Boat leakage](https://www.kaggle.com/anokas/the-nature-conservancy-fisheries-monitoring/finding-boatids/comments):
+   in this dataset the boat is strongly correlated with the kinds of fish it caught.
+2. Context: what surrounds the fish is itself a valuable cue for classifying it.
+
+## Ideas I didn’t implement, or couldn’t make work
+
+- [Right whale recognition by deepsense](https://deepsense.io/deep-learning-right-whale-recognition-kaggle/): for
+  detection I actually started from their blog post, where whale detection uses the now-popular grid-based pipeline. I
+  experimented with their [code](https://www.dropbox.com/s/rohrc1btslxwxzr/deepsense-whales.zip?dl=1) but couldn’t get
+  the network to converge on this fishery data.
+- [DetectNet](https://devblogs.nvidia.com/parallelforall/detectnet-deep-neural-network-object-detection-digits/): deep
+  neural-network object detection in DIGITS, whose data representation is inspired by [Redmon et al. 2015](#ref-yolo).
+
+## References
+
+<ol class="refs">
+  <li id="ref-yolo">J. Redmon, S. Divvala, R. Girshick and A. Farhadi. You Only Look Once: Unified, Real-Time Object Detection. arXiv:1506.02640, 2015.</li>
+  <li id="ref-fcn">J. Long, E. Shelhamer and T. Darrell. Fully Convolutional Networks for Semantic Segmentation. CVPR 2015.</li>
+  <li id="ref-overfeat">P. Sermanet, D. Eigen, X. Zhang, M. Mathieu, R. Fergus and Y. LeCun. OverFeat: Integrated Recognition, Localization and Detection using Convolutional Networks. ICLR 2014.</li>
+  <li id="ref-hoiem">D. Hoiem, Y. Chodpathumwan and Q. Dai. Diagnosing Error in Object Detectors. ECCV 2012, pp. 340–353.</li>
+</ol>

@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import photo from '../assets/portrait/di-wu.jpg';
+import toon from '../assets/portrait/di-wu-toon.jpg';
+---
+
+<figure class="portrait" data-portrait data-toon="false">
+  <div class="portrait__frame">
+    <Image
+      class="portrait__photo"
+      src={photo}
+      alt="Portrait of Di Wu, smiling, seated by a window."
+      width={416}
+      priority
+    />
+    <Image class="portrait__toon" src={toon} alt="" aria-hidden="true" width={416} loading="eager" fetchpriority="low" />
+    <button class="portrait__toggle" type="button" aria-pressed="false" data-portrait-toggle>Toonify</button>
+  </div>
+  <figcaption class="meta">Fig. 1 — Hover, or tap “Toonify”, for the cartoon version of me.</figcaption>
+</figure>
+
+<script>
+  for (const figure of document.querySelectorAll<HTMLElement>('[data-portrait]')) {
+    const button = figure.querySelector<HTMLButtonElement>('[data-portrait-toggle]');
+    button?.addEventListener('click', () => {
+      const on = figure.dataset.toon !== 'true';
+      figure.dataset.toon = String(on);
+      button.setAttribute('aria-pressed', String(on));
+    });
+  }
+</script>

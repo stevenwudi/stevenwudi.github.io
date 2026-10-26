@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE, PROFILES } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  current?: 'home' | 'publications' | 'notes';
+  publishedTime?: string;
+}
+
+const { title, description = SITE.description, type = 'website', current, publishedTime } = Astro.props;
+const fullTitle = title ? `${title} — ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  alternateName: SITE.nameZh,
+  url: SITE.url,
+  image: new URL('/og.png', Astro.site).href,
+  worksFor: { '@type': 'Organization', name: SITE.current.org, url: SITE.current.href },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'University of Sheffield' },
+    { '@type': 'CollegeOrUniversity', name: 'Zhejiang University' },
+  ],
+  knowsAbout: ['Computer vision', 'Machine learning', '6-DoF pose estimation', 'Gesture recognition', '3D perception'],
+  sameAs: PROFILES.map((p) => p.href),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.name} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={`${SITE.name} · ${SITE.nameZh}`} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Di Wu 吴迪 — computer vision & machine learning" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+
+    <Font cssVariable="--font-display" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-body" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-mono" />
+
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    {current === 'home' && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header current={current} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

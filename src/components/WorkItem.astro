@@ -1,0 +1,66 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { Project } from '../data/work';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const media = project.media;
+const poster = media.kind === 'video' ? await getImage({ src: media.poster, width: 960, format: 'webp' }) : undefined;
+---
+
+<article class="project reveal">
+  <div class:list={['project__media', { 'project__media--contain': media.kind === 'image' && media.fit === 'contain' }]}>
+    {
+      media.kind === 'video' ? (
+        <div class="video" data-video>
+          <video controls muted playsinline loop preload="none" poster={poster?.src} aria-label={media.alt}>
+            <source src={media.src} type="video/mp4" />
+          </video>
+          <button class="video__play" type="button" hidden data-video-play>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+            Play demo
+          </button>
+        </div>
+      ) : (
+        <Image src={media.src} alt={media.alt} width={720} />
+      )
+    }
+  </div>
+  <div class="project__body">
+    <p class="meta">{project.meta}</p>
+    <h3 class="project__title">{project.title}</h3>
+    <p class="project__summary">{project.summary}</p>
+    {
+      project.links && (
+        <p class="project__links">
+          {project.links.map((link) => (
+            <a class="text-link" href={link.href}>
+              {link.label} <span class="arrow" aria-hidden="true">{link.href.startsWith('/') ? '→' : '↗'}</span>
+            </a>
+          ))}
+        </p>
+      )
+    }
+  </div>
+</article>
+
+<script>
+  // Swap the native controls for a quiet play button; controls come back once playing.
+  for (const box of document.querySelectorAll<HTMLElement>('[data-video]')) {
+    const video = box.querySelector('video');
+    const button = box.querySelector<HTMLButtonElement>('[data-video-play]');
+    if (!video || !button) continue;
+    video.controls = false;
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      video.controls = true;
+      button.remove();
+      void video.play();
+    });
+  }
+</script>

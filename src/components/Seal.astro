@@ -1,0 +1,23 @@
+---
+import { SEAL } from '../data/seal';
+
+interface Props {
+  class?: string;
+  /** Accessible name; omit for a decorative seal. */
+  label?: string;
+}
+
+const { class: className, label } = Astro.props;
+---
+
+<svg
+  class:list={['seal', className]}
+  viewBox={`0 0 ${SEAL.width} ${SEAL.height}`}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  lang={label ? 'zh' : undefined}
+>
+  <rect width={SEAL.width} height={SEAL.height} rx={SEAL.radius}></rect>
+  {SEAL.glyphs.map((g) => <path d={g.d} />)}
+</svg>

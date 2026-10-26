@@ -1,0 +1,17 @@
+---
+import Seal from './Seal.astro';
+import { SITE } from '../data/site';
+
+const now = new Date();
+const updated = now.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <span class="site-footer__brand">
+      <Seal />
+      <span class="meta">© {now.getFullYear()} {SITE.name} · <span lang="zh">{SITE.nameZh}</span></span>
+    </span>
+    <span class="meta">Updated {updated} · Built with <a href="https://astro.build/">Astro</a></span>
+  </div>
+</footer>

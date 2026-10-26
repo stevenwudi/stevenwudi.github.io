@@ -1,0 +1,14 @@
+---
+import katex from 'katex';
+
+interface Props {
+  tex: string;
+  display?: boolean;
+}
+
+const { tex, display = false } = Astro.props;
+// Rendered to MathML at build time: no client JS, no KaTeX CSS or fonts.
+const html = katex.renderToString(tex, { displayMode: display, output: 'mathml', throwOnError: true });
+---
+
+{display ? <div class="math-display" set:html={html} /> : <Fragment set:html={html} />}

@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro';
+import Seal from '../components/Seal.astro';
+import Portrait from '../components/Portrait.astro';
+import Section from '../components/Section.astro';
+import WorkItem from '../components/WorkItem.astro';
+import PaperItem from '../components/PaperItem.astro';
+import { SITE, PROFILES } from '../data/site';
+import { EXPERIENCE } from '../data/experience';
+import { PROJECTS, HONOURS } from '../data/work';
+import { PUBLICATIONS } from '../data/publications';
+import { SCHOOLS, COURSES } from '../data/learning';
+
+const selected = PUBLICATIONS.filter((p) => p.selected);
+---
+
+<Base current="home">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero__text">
+      <h1 class="hero__name" id="hero-title">
+        <span>Di Wu</span>
+        <Seal label={SITE.nameZh} />
+      </h1>
+      <p class="hero__lead">Machine-learning systems that <em>see</em> — from human gesture to 6-DoF pose and 3D perception.</p>
+      <p class="hero__bio">
+        PhD from Sheffield, postdocs at Idiap (EPFL) and Shenzhen University, then industry at Ping An and FITURE. Currently
+        at <a href={SITE.current.href}>{SITE.current.org}</a>.
+      </p>
+      <div class="hero__actions">
+        <a class="button" href={`mailto:${SITE.email}`}>Get in touch <span class="arrow" aria-hidden="true">→</span></a>
+        {
+          PROFILES.map((p) => (
+            <a class="text-link" href={p.href}>
+              {p.label} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          ))
+        }
+        {
+          SITE.cv && (
+            <a class="text-link" href={SITE.cv}>
+              CV <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+    <Portrait />
+  </section>
+
+  <Section id="about" num="01" title="About">
+    <div class="about__bio">
+      <p>
+        I use machine learning — from probabilistic graphical models to deep networks — for high-level computer vision:
+        recognising human actions and gestures, tracking, and recovering the full 3D pose of objects from a single image.
+        The thread running through it is the 2D-to-3D, “inverse graphics” problem.
+      </p>
+      <p class="muted">
+        I received my PhD from the University of Sheffield in 2014 and my bachelor’s from Zhejiang University in 2010, then
+        did postdocs at the Idiap Research Institute — affiliated with EPFL, in a beautiful Swiss Alpine town — and at
+        Shenzhen University. I hope to use machine learning to solve real-world problems.
+      </p>
+    </div>
+    <ol class="timeline" role="list">
+      {
+        EXPERIENCE.map((r) => (
+          <li class="timeline__item reveal">
+            <span class="timeline__period">{r.period}</span>
+            <div>
+              <p class="timeline__org">{r.href ? <a href={r.href}>{r.org}</a> : r.org}</p>
+              {r.role && (
+                <p class="timeline__role">
+                  {r.role}
+                  {r.place && <span> · {r.place}</span>}
+                </p>
+              )}
+              {r.summary && <p class="timeline__summary">{r.summary}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section id="work" num="02" title="Work" intro="Things I have built, and challenges entered along the way.">
+    <div class="projects">
+      {PROJECTS.map((project) => <WorkItem project={project} />)}
+    </div>
+
+    <h3 class="subhead label" id="honours">Honours &amp; challenges</h3>
+    <ol class="honours" role="list" aria-labelledby="honours">
+      {
+        HONOURS.map((h) => (
+          <li class="honour reveal">
+            <span class="honour__rank">
+              {h.rank}<sup>{h.suffix}</sup>
+              {h.of && <span class="honour__of">of {h.of}</span>}
+            </span>
+            <div>
+              <p class="honour__event">{h.href ? <a href={h.href}>{h.event}</a> : h.event}</p>
+              <p class="honour__detail meta">{h.detail}</p>
+            </div>
+            <span class="honour__year">{h.year ?? ''}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section id="papers" num="03" title="Papers" intro={`Selected from ${PUBLICATIONS.length} publications.`}>
+    <ol class="papers papers--compact" role="list">
+      {selected.map((paper) => <PaperItem paper={paper} variant="compact" />)}
+    </ol>
+    <p class="more">
+      <a class="text-link" href="/publications/">All {PUBLICATIONS.length} publications <span class="arrow" aria-hidden="true">→</span></a>
+    </p>
+  </Section>
+
+  <Section id="notes" num="04" title="Notes">
+    <a class="note-card reveal" href="/notes/kaggle-fisheries/">
+      <p class="meta">January 2017 · Kaggle write-up</p>
+      <h3>Finding fish on fishing boats</h3>
+      <p>
+        My approach to The Nature Conservancy Fisheries Monitoring challenge: a ResNet-50 fish detector turned fully
+        convolutional, multi-scale response maps with an attention prior — and the boat leakage that made whole-image
+        classifiers surprisingly strong.
+      </p>
+      <span class="text-link">Read the note <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+  </Section>
+
+  <Section id="contact" num="05" title="Contact" intro="Email is the quickest way to reach me.">
+    <p class="contact__email">
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      <button class="copy" type="button" data-copy={SITE.email} hidden>Copy</button>
+    </p>
+    <ul class="profiles" role="list">
+      {
+        PROFILES.map((p) => (
+          <li>
+            <a class="text-link" href={p.href}>
+              {p.label} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <details class="learning">
+      <summary>Always learning</summary>
+      <div class="learning__body">
+        <div>
+          <h3>Summer schools</h3>
+          <ul class="learning__list" role="list">
+            {
+              SCHOOLS.map((s) => (
+                <li>
+                  <a href={s.href}>{s.title}</a> <span>· {s.meta}</span>
+                  {s.note && (
+                    <span>
+                      {' '}
+                      — <a href={s.note.href}>{s.note.label}</a>
+                    </span>
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        {
+          COURSES.map((group) => (
+            <div>
+              <h3>{group.provider}</h3>
+              <ul class="learning__list" role="list">
+                {group.items.map((c) => (
+                  <li>
+                    {c.href ? <a href={c.href}>{c.title}</a> : c.title}
+                    {c.by && <span> · {c.by}</span>}
+                  </li>
+                ))}
+              </ul>
+              {group.profile && (
+                <p class="meta" style="margin-top: 0.75rem">
+                  <a href={group.profile}>My {group.provider} profile</a>
+                </p>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </details>
+  </Section>
+</Base>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    if (!navigator.clipboard) continue;
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Copy failed';
+      }
+      setTimeout(() => (button.textContent = 'Copy'), 2000);
+    });
+  }
+</script>

@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import { isMe, type Publication } from '../data/publications';
+
+interface Props {
+  paper: Publication;
+  /** `full` on /publications/, `compact` for the homepage list. */
+  variant?: 'full' | 'compact';
+}
+
+const { paper, variant = 'full' } = Astro.props;
+const full = variant === 'full';
+---
+
+<li class:list={['paper', `paper--${variant}`, 'reveal']} id={full ? paper.id : undefined}>
+  {!full && <span class="paper__year">{paper.year}</span>}
+  {
+    full &&
+      (paper.image ? (
+        <a class="paper__thumb" href={paper.image.src} aria-label={`Figure from “${paper.title}” (full size)`}>
+          <Image src={paper.image} alt={paper.imageAlt ?? ''} width={352} />
+        </a>
+      ) : (
+        <span class="paper__thumb paper__thumb--empty" aria-hidden="true">
+          <span>{paper.venue}</span>
+        </span>
+      ))
+  }
+  <div>
+    <h3 class="paper__title">
+      {full ? paper.title : <a href={`/publications/#${paper.id}`}>{paper.title}</a>}
+    </h3>
+    <p class="paper__authors">
+      {paper.authors.map((author, i) => [i > 0 ? ', ' : '', isMe(author) ? <strong>{author}</strong> : author])}
+    </p>
+    <p class="paper__venue">
+      <span class="badge">{paper.venue} {paper.year}</span>
+      <span class="meta">{paper.venueFull}</span>
+      {paper.note && <span class="badge badge--accent">{paper.note}</span>}
+    </p>
+    {
+      full && paper.links && paper.links.length > 0 && (
+        <p class="paper__links">
+          {paper.links.map((link) => (
+            <a href={link.href}>
+              {link.label} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </p>
+      )
+    }
+    {
+      full && paper.abstract && (
+        <details>
+          <summary>Abstract</summary>
+          <p>{paper.abstract}</p>
+        </details>
+      )
+    }
+  </div>
+</li>

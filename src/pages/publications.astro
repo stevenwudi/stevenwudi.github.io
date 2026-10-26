@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import PaperItem from '../components/PaperItem.astro';
+import { PUBLICATIONS } from '../data/publications';
+import { SITE } from '../data/site';
+
+const years = [...new Set(PUBLICATIONS.map((p) => p.year))].sort((a, b) => b - a);
+const span = `${years.at(-1)}–${years[0]}`;
+---
+
+<Base
+  title="Publications"
+  description={`${PUBLICATIONS.length} papers by Di Wu (吴迪) on gesture and action recognition, 6-DoF pose estimation, tracking and multimedia, ${span}.`}
+  current="publications"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="label">Publications</p>
+      <h1>Papers</h1>
+      <p>
+        {PUBLICATIONS.length} papers on gesture and action recognition, 6-DoF pose estimation, visual tracking and multimedia,
+        {span}.
+        {
+          SITE.links.scholar && (
+            <>
+              {' '}
+              Also on <a href={SITE.links.scholar}>Google Scholar</a>.
+            </>
+          )
+        }
+      </p>
+    </header>
+
+    {
+      years.map((year) => (
+        <section class="year-group" aria-labelledby={`y${year}`}>
+          <h2 class="year-group__year" id={`y${year}`}>
+            {year}
+          </h2>
+          <ol class="papers" role="list">
+            {PUBLICATIONS.filter((p) => p.year === year).map((paper) => (
+              <PaperItem paper={paper} />
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+  </div>
+</Base>

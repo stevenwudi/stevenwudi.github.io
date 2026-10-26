@@ -1,0 +1,39 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    pubDate: string;
+    updatedDate?: string;
+  };
+}
+
+const { frontmatter: fm } = Astro.props;
+const fmt = (date: string) =>
+  new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base title={fm.title} description={fm.description} type="article" current="notes" publishedTime={fm.pubDate}>
+  <article class="article wrap">
+    <header class="article__head">
+      <p class="meta">
+        <a href="/#notes">Notes</a> · <time datetime={fm.pubDate}>{fmt(fm.pubDate)}</time>
+        {
+          fm.updatedDate && (
+            <>
+              {' '}
+              · updated <time datetime={fm.updatedDate}>{fmt(fm.updatedDate)}</time>
+            </>
+          )
+        }
+      </p>
+      <h1>{fm.title}</h1>
+      <p class="article__dek">{fm.description}</p>
+    </header>
+    <div class="article__body prose">
+      <slot />
+    </div>
+  </article>
+</Base>
