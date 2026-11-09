@@ -1,35 +1,34 @@
 ---
 import { Image } from 'astro:assets';
-import { isMe, type Publication } from '../data/publications';
+import { isMe, toBibtex, TOPICS, type Publication } from '../data/publications';
 
 interface Props {
   paper: Publication;
-  /** `full` on /publications/, `compact` for the homepage list. */
-  variant?: 'full' | 'compact';
 }
 
-const { paper, variant = 'full' } = Astro.props;
-const full = variant === 'full';
+// One entry on /publications/ (figure, abstract, cite, topics). The homepage uses PaperCard.
+const { paper } = Astro.props;
+const search = [paper.title, ...paper.authors, paper.venue, paper.venueFull, paper.year, paper.abstract ?? '']
+  .join(' ')
+  .toLowerCase();
+const topicLabels = paper.topics.map((t) => TOPICS.find((x) => x.id === t)?.label).filter(Boolean);
 ---
 
-<li class:list={['paper', `paper--${variant}`, 'reveal']} id={full ? paper.id : undefined}>
-  {!full && <span class="paper__year">{paper.year}</span>}
+<li class="paper paper--full reveal" id={paper.id} data-topics={paper.topics.join(' ')} data-search={search}>
   {
-    full &&
-      (paper.image ? (
-        <a class="paper__thumb" href={paper.image.src} aria-label={`Figure from “${paper.title}” (full size)`}>
-          <Image src={paper.image} alt={paper.imageAlt ?? ''} width={352} />
-        </a>
-      ) : (
-        <span class="paper__thumb paper__thumb--empty" aria-hidden="true">
-          <span>{paper.venue}</span>
-        </span>
-      ))
+    paper.image ? (
+      <a class="paper__thumb" href={paper.image.src} aria-label={`Figure from “${paper.title}” (full size)`}>
+        <Image src={paper.image} alt={paper.imageAlt ?? ''} width={352} />
+      </a>
+    ) : (
+      <span class="paper__thumb paper__thumb--empty" aria-hidden="true">
+        <span>{paper.venue}</span>
+        <small>{paper.year}</small>
+      </span>
+    )
   }
   <div>
-    <h3 class="paper__title">
-      {full ? paper.title : <a href={`/publications/#${paper.id}`}>{paper.title}</a>}
-    </h3>
+    <h3 class="paper__title">{paper.title}</h3>
     <p class="paper__authors">
       {paper.authors.map((author, i) => [i > 0 ? ', ' : '', isMe(author) ? <strong>{author}</strong> : author])}
     </p>
@@ -39,18 +38,22 @@ const full = variant === 'full';
       {paper.note && <span class="badge badge--accent">{paper.note}</span>}
     </p>
     {
-      full && paper.links && paper.links.length > 0 && (
+      (
         <p class="paper__links">
-          {paper.links.map((link) => (
+          {paper.links?.map((link) => (
             <a href={link.href}>
               {link.label} <span class="arrow" aria-hidden="true">↗</span>
             </a>
           ))}
+          <button class="paper__cite" type="button" data-bibtex={toBibtex(paper)} hidden>
+            Cite
+          </button>
+          <span class="paper__topics meta">{topicLabels.join(' · ')}</span>
         </p>
       )
     }
     {
-      full && paper.abstract && (
+      paper.abstract && (
         <details>
           <summary>Abstract</summary>
           <p>{paper.abstract}</p>

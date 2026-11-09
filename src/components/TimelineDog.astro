@@ -1,0 +1,38 @@
+---
+// The cartoon dog from Fig. 1, keeping you company down the Bio timeline: it stands on the logo of
+// the entry you are reading and hops to the next one as you scroll (src/scripts/timeline-dog.ts).
+// Its frames are rendered once from the animation package's .blend (tools/figure3d/
+// render_dog_sprites.py + build_dog_sprite.mjs) and played as CSS sprite strips, so it costs no
+// second WebGL renderer and draws the same on every GPU. Decorative: hidden from assistive
+// technology, and absent without JavaScript. Place it inside `.timeline-wrap`, after the list.
+import runStrip from '../assets/dog/dog-run.webp?url';
+import idleStrip from '../assets/dog/dog-idle.webp?url';
+import sprite from '../assets/dog/dog-sprite.json';
+
+const style = [
+  `--dog-run: url(${runStrip})`,
+  `--dog-idle: url(${idleStrip})`,
+  `--dog-run-frames: ${sprite.runFrames}`,
+  `--dog-idle-frames: ${sprite.idleFrames}`,
+  `--dog-run-time: ${(sprite.runFrames / sprite.fps).toFixed(3)}s`,
+  `--dog-aspect: ${sprite.frameWidth} / ${sprite.frameHeight}`,
+  `--dog-ground: ${sprite.ground}`,
+  `--dog-paw: ${sprite.paw}`,
+  `--dog-hold: ${sprite.hold}`,
+].join('; ');
+---
+
+<div class="timeline-dog" aria-hidden="true" hidden data-timeline-dog style={style}>
+  <span class="timeline-dog__shadow"></span>
+  <span class="timeline-dog__body">
+    <span class="timeline-dog__frames timeline-dog__frames--run"></span>
+    <span class="timeline-dog__frames timeline-dog__frames--idle"></span>
+  </span>
+</div>
+
+<script>
+  import { mountTimelineDog } from '../scripts/timeline-dog';
+
+  const dog = document.querySelector<HTMLElement>('[data-timeline-dog]');
+  if (dog) mountTimelineDog(dog);
+</script>

@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import { isMe, TOPICS, type Publication } from '../data/publications';
+
+interface Props {
+  paper: Publication;
+}
+
+// Homepage card: figure on top, then venue, title, authors and links. The whole card opens the paper's
+// entry on /publications/ (stretched title link); the paper's own links sit above it.
+const { paper } = Astro.props;
+const entry = `/publications/#${paper.id}`;
+const topic = TOPICS.find((t) => t.id === paper.topics[0])?.label;
+---
+
+<li class="pcard reveal">
+  <div class:list={['pcard__media', { 'pcard__media--text': !paper.image }]} aria-hidden="true">
+    {
+      paper.image ? (
+        <Image src={paper.image} alt="" width={640} />
+      ) : (
+        <>
+          <span class="pcard__venue">{paper.venue}</span>
+          <span class="pcard__topic">{topic}</span>
+        </>
+      )
+    }
+  </div>
+  <div class="pcard__body">
+    <p class="pcard__meta">
+      <span class="badge">{paper.venue} {paper.year}</span>
+      {paper.note && <span class="badge badge--accent">{paper.note}</span>}
+    </p>
+    <h3 class="pcard__title"><a href={entry}>{paper.title}</a></h3>
+    <p class="pcard__authors">
+      {paper.authors.map((author, i) => [i > 0 ? ', ' : '', isMe(author) ? <strong>{author}</strong> : author])}
+    </p>
+    {
+      paper.links && paper.links.length > 0 && (
+        <p class="pcard__links">
+          {paper.links.map((link) => (
+            <a href={link.href}>
+              {link.label} <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </p>
+      )
+    }
+  </div>
+</li>

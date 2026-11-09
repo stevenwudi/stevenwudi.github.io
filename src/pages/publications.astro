@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import PaperItem from '../components/PaperItem.astro';
-import { PUBLICATIONS } from '../data/publications';
+import { PUBLICATIONS, TOPICS } from '../data/publications';
 import { SITE } from '../data/site';
 
 const years = [...new Set(PUBLICATIONS.map((p) => p.year))].sort((a, b) => b - a);
 const span = `${years.at(-1)}–${years[0]}`;
+const count = (id: string) => PUBLICATIONS.filter((p) => p.topics.some((t) => t === id)).length;
 ---
 
 <Base
@@ -31,9 +32,31 @@ const span = `${years.at(-1)}–${years[0]}`;
       </p>
     </header>
 
+    <div class="pub-tools" data-pub-tools hidden>
+      <label class="pub-search">
+        <span class="visually-hidden">Search publications</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+          <path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+        </svg>
+        <input type="search" placeholder="Search titles, authors, venues…" autocomplete="off" data-pub-search />
+      </label>
+      <div class="chips" role="group" aria-label="Filter by topic">
+        <button class="chip" type="button" aria-pressed="true" data-topic="">All <span>{PUBLICATIONS.length}</span></button>
+        {
+          TOPICS.map((t) => (
+            <button class="chip" type="button" aria-pressed="false" data-topic={t.id}>
+              {t.label} <span>{count(t.id)}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="pub-count meta" aria-live="polite" data-pub-count></p>
+    </div>
+
     {
       years.map((year) => (
-        <section class="year-group" aria-labelledby={`y${year}`}>
+        <section class="year-group" aria-labelledby={`y${year}`} data-year-group>
           <h2 class="year-group__year" id={`y${year}`}>
             {year}
           </h2>
@@ -45,5 +68,69 @@ const span = `${years.at(-1)}–${years[0]}`;
         </section>
       ))
     }
+    <p class="pub-empty" data-pub-empty hidden>
+      No papers match. <button class="text-link" type="button" data-pub-reset>Clear the filters</button>
+    </p>
   </div>
 </Base>
+
+<script>
+  const tools = document.querySelector<HTMLElement>('[data-pub-tools]');
+  const search = document.querySelector<HTMLInputElement>('[data-pub-search]');
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+  const papers = [...document.querySelectorAll<HTMLElement>('.paper[data-search]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-year-group]')];
+  const countEl = document.querySelector<HTMLElement>('[data-pub-count]');
+  const empty = document.querySelector<HTMLElement>('[data-pub-empty]');
+  let topic = '';
+
+  const apply = () => {
+    const terms = (search?.value ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const p of papers) {
+      const ok =
+        (!topic || (p.dataset.topics ?? '').split(' ').includes(topic)) &&
+        terms.every((t) => (p.dataset.search ?? '').includes(t));
+      p.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const g of groups) g.hidden = !g.querySelector('.paper:not([hidden])');
+    if (countEl) countEl.textContent = shown === papers.length ? `${shown} papers` : `${shown} of ${papers.length} papers`;
+    if (empty) empty.hidden = shown > 0;
+  };
+
+  if (tools) {
+    tools.hidden = false;
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        topic = chip.dataset.topic ?? '';
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        apply();
+      }),
+    );
+    search?.addEventListener('input', apply);
+    const measure = () => document.documentElement.style.setProperty('--tools-h', `${tools.offsetHeight}px`);
+    measure();
+    addEventListener('resize', measure);
+    document.querySelector('[data-pub-reset]')?.addEventListener('click', () => {
+      if (search) search.value = '';
+      chips[0]?.click();
+    });
+    apply();
+  }
+
+  // "Cite": copy a BibTeX entry.
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-bibtex]')) {
+    if (!navigator.clipboard) continue;
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.bibtex ?? '');
+        button.textContent = 'BibTeX copied';
+      } catch {
+        button.textContent = 'Copy failed';
+      }
+      setTimeout(() => (button.textContent = 'Cite'), 2000);
+    });
+  }
+</script>

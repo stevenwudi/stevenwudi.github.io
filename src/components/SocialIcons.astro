@@ -1,0 +1,31 @@
+---
+import { SITE, PROFILES } from '../data/site';
+
+// Round icon links under the hero, after karpathy.ai: email, then each profile.
+const icons: Record<string, string> = {
+  Email:
+    '<path d="M4 6.5h16v11H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m4.5 7 7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
+  GitHub:
+    '<path fill="currentColor" d="M12 2.5a9.5 9.5 0 0 0-3 18.52c.47.09.65-.2.65-.46v-1.6c-2.65.58-3.2-1.27-3.2-1.27-.44-1.1-1.06-1.4-1.06-1.4-.87-.6.06-.58.06-.58.96.07 1.46.98 1.46.98.85 1.46 2.24 1.04 2.78.8.09-.62.33-1.04.6-1.28-2.11-.24-4.33-1.06-4.33-4.7 0-1.04.37-1.89.98-2.55-.1-.24-.42-1.21.09-2.53 0 0 .8-.26 2.62.97a9.1 9.1 0 0 1 4.77 0c1.82-1.23 2.62-.97 2.62-.97.51 1.32.19 2.29.1 2.53.6.66.97 1.51.97 2.55 0 3.65-2.22 4.46-4.34 4.7.34.29.64.87.64 1.75v2.6c0 .26.17.56.66.46A9.5 9.5 0 0 0 12 2.5Z"/>',
+  Kaggle:
+    '<path fill="currentColor" d="M8.2 3.5h2.4v9.1l4.6-5h3l-4.9 5.2 5.3 7.7h-3l-3.9-5.8-1.1 1.2v4.6H8.2z"/>',
+  'Google Scholar':
+    '<path fill="currentColor" d="M12 3 2.5 10l3.9 2.9a5.6 5.6 0 0 1 11.2 0L21.5 10zm0 8a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>',
+  LinkedIn:
+    '<path fill="currentColor" d="M5 9h3v10H5zm1.5-5a1.7 1.7 0 1 1 0 3.4 1.7 1.7 0 0 1 0-3.4zM10 9h2.9v1.4c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.7V19h-3v-4.8c0-1.2 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V19h-3z"/>',
+};
+const links = [{ label: 'Email', href: `mailto:${SITE.email}` }, ...PROFILES];
+---
+
+<ul class="social" role="list">
+  {
+    links.map((l) => (
+      <li>
+        <a class="social__link" href={l.href} title={l.label === 'Email' ? SITE.email : l.label}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons[l.label] ?? ''} />
+          <span class="visually-hidden">{l.label === 'Email' ? `Email ${SITE.email}` : l.label}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

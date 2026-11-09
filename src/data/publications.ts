@@ -14,10 +14,23 @@ import silhouette from '../assets/papers/silhouette-action-recognition.png';
 import oneShotKinect from '../assets/papers/one-shot-gesture-kinect.png';
 import oneShotRgbd from '../assets/papers/one-shot-gesture-rgbd.jpg';
 import correlogram from '../assets/papers/correlogram-body-poses.png';
+import vehicleReid from '../assets/papers/vehicle-reid.jpg';
+import faceTracking from '../assets/papers/face-tracking-subsampled.jpg';
+
+export const TOPICS = [
+  { id: 'pose', label: '3D pose & driving' },
+  { id: 'gesture', label: 'Gesture & action' },
+  { id: 'tracking', label: 'Tracking & re-ID' },
+  { id: 'multimedia', label: 'Multimedia' },
+  { id: 'learning', label: 'Deep learning' },
+] as const;
+
+export type Topic = (typeof TOPICS)[number]['id'];
 
 export interface Publication {
   /** Anchor id on /publications/. */
   id: string;
+  topics: Topic[];
   title: string;
   authors: string[];
   /** Short venue badge, e.g. "TPAMI". */
@@ -29,12 +42,12 @@ export interface Publication {
   abstract?: string;
   links?: Link[];
   note?: string;
-  selected?: boolean;
 }
 
 export const PUBLICATIONS: Publication[] = [
   {
     id: 'neural-mesh-refiner',
+    topics: ['pose'],
     title: 'Neural Mesh Refiner for 6-DoF Pose Estimation',
     authors: ['Di Wu', 'Yihao Chen', 'Xianbiao Qi', 'Yongjian Jian', 'Weixuan Chen', 'Rong Xiao'],
     venue: 'arXiv',
@@ -45,10 +58,10 @@ export const PUBLICATIONS: Publication[] = [
     abstract:
       'How can we effectively utilise the 2D monocular image information for recovering the 6D pose (6-DoF) of the visual objects? Deep learning has shown to be effective for robust and real-time monocular pose estimation. Oftentimes, the network learns to regress the 6-DoF pose using a naive loss function. However, due to a lack of geometrical scene understanding from the directly regressed pose estimation, there are misalignments between the rendered mesh from the 3D object and the 2D instance segmentation result, e.g., bounding boxes and masks prediction. This paper bridges the gap between 2D mask generation and 3D location prediction via a differentiable neural mesh renderer. We utilise the overlay between the accurate mask prediction and less accurate mesh prediction to iteratively optimise the direct regressed 6D pose information with a focus on translation estimation. By leveraging geometry, we demonstrate that our technique significantly improves direct regression performance on the difficult task of translation estimation and achieve the state of the art results on Peking University/Baidu - Autonomous Driving dataset and the ApolloScape 3D Car Instance dataset.',
     links: [{ label: 'arXiv', href: 'https://arxiv.org/abs/2003.07561' }],
-    selected: true,
   },
   {
     id: '6d-vnet',
+    topics: ['pose'],
     title: '6D-VNet: End-to-end 6-DoF Vehicle Pose Estimation from Monocular RGB Images',
     authors: ['Di Wu', 'Zhaoyong Zhuang', 'Canqun Xiang', 'Wenbin Zou', 'Xia Li'],
     venue: 'CVPRW',
@@ -64,10 +77,10 @@ export const PUBLICATIONS: Publication[] = [
         href: 'https://openaccess.thecvf.com/content_CVPRW_2019/html/Autonomous_Driving/Wu_6D-VNet_End-to-End_6-DoF_Vehicle_Pose_Estimation_From_Monocular_RGB_Images_CVPRW_2019_paper.html',
       },
     ],
-    selected: true,
   },
   {
     id: 'kernalised-convnet-tracking',
+    topics: ['tracking'],
     title: 'Kernalised Multi-resolution Convnet for Visual Tracking',
     authors: ['Di Wu', 'Wenbin Zou', 'Xia Li', 'Y. Zhao'],
     venue: 'CVPRW',
@@ -80,14 +93,21 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'vehicle-reid',
-    title: 'Multi-model Metric Learning for Vehicle Re-identification in Traffic Surveillance Environment',
-    authors: ['Y. Tang', 'D. Wu', 'Z. Jin', 'W. Zou', 'X. Li'],
+    topics: ['tracking'],
+    title: 'Multi-modal Metric Learning for Vehicle Re-identification in Traffic Surveillance Environment',
+    authors: ['Yi Tang', 'Di Wu', 'Z. Jin', 'Wenbin Zou', 'Xia Li'],
     venue: 'ICIP',
     venueFull: 'IEEE International Conference on Image Processing',
     year: 2017,
+    image: vehicleReid,
+    imageAlt: 'Grid of surveillance crops grouped by identity: each row shows the same vehicle seen by different cameras.',
+    abstract:
+      'Vehicle re-identification (Re-Id) aims to retrieve the same vehicle captured by disjoint cameras at different time instants from different locations, and is a challenging task mainly due to the high similarity among the captured vehicle images in surveillance environment. With the rapid development of Convolutional Neural Network (CNN), learning-based deep features have been adopted to combine with hand-crafted features to re-identify vehicles in traffic surveillance environment. However, the two kinds of features are in different feature space, and if they are fused directly together, their complementary correlation is not able to be fully explored. To address such an issue, this paper proposes a multi-modal metric learning architecture to fuse deep features and hand-crafted ones in an end-to-end optimization network, which achieves a more robust and discriminative feature representation for vehicle re-identification. The extensive experiments on a large-scale traffic surveillance vehicle dataset demonstrate that our proposed approach substantially outperforms the state-of-the-art methods on vehicle Re-Id.',
+    links: [{ label: 'DOI', href: 'https://doi.org/10.1109/ICIP.2017.8296683' }],
   },
   {
     id: 'ddnn-tpami',
+    topics: ['gesture', 'learning'],
     title: 'Deep Dynamic Neural Networks for Multimodal Gesture Segmentation and Recognition',
     authors: ['Di Wu', 'Lionel Pigou', 'Pieter-Jan Kindermans', 'Nam Le', 'Ling Shao', 'Joni Dambre', 'Jean-Marc Odobez'],
     venue: 'TPAMI',
@@ -101,26 +121,27 @@ export const PUBLICATIONS: Publication[] = [
       { label: 'PDF', href: '/Images/tPAMI2016.pdf' },
       { label: 'DOI', href: 'https://doi.org/10.1109/TPAMI.2016.2537340' },
     ],
-    selected: true,
-  },
-  {
-    id: 'face-diarization-periodical-detection',
-    title: 'Efficient and Accurate Tracking for Face Diarization via Periodical Detection',
-    authors: ['N. Le', 'A. Heili', 'D. Wu', 'J.-M. Odobez'],
-    venue: 'ICPR',
-    venueFull: 'International Conference on Pattern Recognition',
-    year: 2016,
   },
   {
     id: 'face-tracking-subsampled-detection',
+    topics: ['tracking', 'multimedia'],
     title: 'Temporally Subsampled Detection for Accurate and Efficient Face Tracking and Diarization',
-    authors: ['N. Le', 'A. Heili', 'D. Wu', 'J.-M. Odobez'],
+    authors: ['Nam Le', 'A. Heili', 'Di Wu', 'Jean-Marc Odobez'],
     venue: 'ICPR',
-    venueFull: 'International Conference on Pattern Recognition',
+    venueFull: 'International Conference on Pattern Recognition, Cancún',
     year: 2016,
+    image: faceTracking,
+    imageAlt: 'Three video frames with circled face detections, linked as nodes of a graph across a time window.',
+    abstract:
+      'Face diarization, i.e. face tracking and clustering within video documents, is useful and important for video indexing and fast browsing but it is also a difficult and time consuming task. In this paper, we address the tracking aspect and propose a novel algorithm with two main contributions. First, we propose an approach that leverages state-of-the-art deformable part-based model (DPM) face detector with a multi-cue discriminant tracking-by-detection framework that relies on automatically learned long-term time-interval sensitive association costs specific to each document type. Secondly to improve performance, we propose an explicit false alarm removal step at the track level to efficiently filter out wrong detections (and resulting tracks). Altogether, the method is able to skip frames, i.e. process only 3 to 4 frames per second - thus cutting down computational cost - while performing better than state-of-the-art methods as evaluated on three public benchmarks from different context including a movie and broadcast data.',
+    links: [
+      { label: 'PDF', href: 'https://publications.idiap.ch/attachments/papers/2016/Le_ICPR_2016.pdf' },
+      { label: 'DOI', href: 'https://doi.org/10.1109/ICPR.2016.7899896' },
+    ],
   },
   {
     id: 'eumssi-mediaeval',
+    topics: ['multimedia'],
     title: 'EUMSSI team at the MediaEval Person Discovery Challenge',
     authors: ['Nam Le', 'Di Wu', 'Sylvain Meignier', 'Jean-Marc Odobez'],
     venue: 'MediaEval',
@@ -135,6 +156,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'ddnn-eccvw',
+    topics: ['gesture', 'learning'],
     title: 'Deep Dynamic Neural Networks for Gesture Segmentation and Recognition',
     authors: ['Di Wu', 'Ling Shao'],
     venue: 'ECCVW',
@@ -148,6 +170,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'multimodal-dynamic-networks',
+    topics: ['gesture', 'learning'],
     title: 'Multimodal Dynamic Networks for Gesture Recognition',
     authors: ['Di Wu', 'Ling Shao'],
     venue: 'ACM MM',
@@ -160,6 +183,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'hierarchical-parametric-networks',
+    topics: ['gesture', 'learning'],
     title: 'Leveraging Hierarchical Parametric Networks for Skeletal Joints Based Action Segmentation and Recognition',
     authors: ['Di Wu', 'Ling Shao'],
     venue: 'CVPR',
@@ -177,10 +201,10 @@ export const PUBLICATIONS: Publication[] = [
       { label: 'Video', href: 'https://www.youtube.com/watch?v=Hez9PkM-XfA' },
       { label: 'Code', href: 'https://github.com/stevenwudi/CVPR_2014_code' },
     ],
-    selected: true,
   },
   {
     id: 'learning-deep-and-wide',
+    topics: ['learning'],
     title: 'Learning Deep and Wide: A Spectral Method for Learning Deep Networks',
     authors: ['Ling Shao', 'Di Wu', 'X. Li'],
     venue: 'TNNLS',
@@ -190,10 +214,10 @@ export const PUBLICATIONS: Publication[] = [
     imageAlt: 'Penultimate-layer features of several networks embedded into one low-dimensional manifold.',
     abstract:
       'Building intelligent systems that are capable of extracting high-level representations from high-dimensional sensory data lies at the core of solving many computer vision related tasks. We propose the Multi-Spectral Neural Networks (MSNN) to learn features from multi-column Deep Neural Networks and embed the penultimate hierarchical discriminative manifolds into a compact representation. The low dimensional embedding explores the complementary property of different views wherein the distribution of each view is sufficiently smooth and hence achieves robustness given few labeled training data. Our experiments show that spectrally embedding several deep neural networks can explore the optimum output from the multi-column networks and consistently decrease the error rate compared to a single deep network.',
-    selected: true,
   },
   {
     id: 'mmm-svm',
+    topics: ['gesture'],
     title: 'Multi-Max-Margin Support Vector Machine for Multi-Source Human Action Recognition',
     authors: ['Di Wu', 'Ling Shao'],
     venue: 'Neurocomputing',
@@ -206,6 +230,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'silhouette-action-recognition',
+    topics: ['gesture'],
     title: 'Silhouette Analysis Based Action Recognition via Exploiting Human Poses',
     authors: ['Di Wu', 'Ling Shao'],
     venue: 'TCSVT',
@@ -218,6 +243,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'one-shot-gesture-kinect',
+    topics: ['gesture'],
     title: 'One Shot Learning Gesture Recognition with Kinect Sensor',
     authors: ['Di Wu', 'F. Zhu', 'Ling Shao', 'H. Zhang'],
     venue: 'ACM MM',
@@ -230,6 +256,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'one-shot-gesture-rgbd',
+    topics: ['gesture'],
     title: 'One Shot Learning Gesture Recognition from RGBD Images',
     authors: ['Di Wu', 'F. Zhu', 'Ling Shao'],
     venue: 'CVPRW',
@@ -242,6 +269,7 @@ export const PUBLICATIONS: Publication[] = [
   },
   {
     id: 'correlogram-body-poses',
+    topics: ['gesture'],
     title: 'Action Recognition Using Correlogram of Body Poses and Spectral Regression',
     authors: ['Ling Shao', 'Di Wu', 'X. Chen'],
     venue: 'ICIP',
@@ -256,3 +284,26 @@ export const PUBLICATIONS: Publication[] = [
 
 /** Bold the site owner's name in author lists. */
 export const isMe = (author: string) => author === 'Di Wu' || author === 'D. Wu';
+
+const JOURNALS = new Set(['TPAMI', 'TNNLS', 'TCSVT', 'Neurocomputing']);
+
+/** A BibTeX entry built from the publication data (for the "Cite" button). */
+export function toBibtex(p: Publication): string {
+  const surname = (p.authors[0] ?? 'anon').split(' ').at(-1)!.toLowerCase().replace(/[^a-z]/g, '');
+  const word = p.title.toLowerCase().match(/[a-z0-9]+/g)?.find((w) => !['a', 'an', 'the', 'on', 'for'].includes(w)) ?? '';
+  const doi = p.links?.find((l) => l.label === 'DOI')?.href.replace('https://doi.org/', '');
+  const arxiv = p.venue === 'arXiv';
+  const type = arxiv || JOURNALS.has(p.venue) ? 'article' : 'inproceedings';
+  const fields: [string, string | number | undefined][] = [
+    ['title', `{${p.title}}`],
+    ['author', p.authors.join(' and ')],
+    [type === 'article' ? 'journal' : 'booktitle', p.venueFull],
+    ['year', p.year],
+    ['doi', doi],
+  ];
+  const body = fields
+    .filter(([, v]) => v !== undefined)
+    .map(([k, v]) => `  ${k} = {${v}}`)
+    .join(',\n');
+  return `@${type}{${surname}${p.year}${word},\n${body}\n}`;
+}

@@ -1,0 +1,185 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { PROJECTS } from '../data/work';
+
+// A project index beside one compact figure. Choosing a project opens its description and
+// swaps the figure; vermilion corner marks snap onto the new image like a detector locking on.
+const pad = (n: number) => String(n).padStart(2, '0');
+const extras = await Promise.all(
+  PROJECTS.map(async ({ media }) => ({
+    poster: media.kind === 'video' ? await getImage({ src: media.poster, width: 960, format: 'webp' }) : undefined,
+    backdrop:
+      media.kind === 'image' && media.backdrop ? await getImage({ src: media.src, width: 48, format: 'webp' }) : undefined,
+  })),
+);
+---
+
+<div class="works" data-works>
+  <figure class="works__figure">
+    <div class="works__frame">
+      <div class="works__screen">
+        {
+          PROJECTS.map(({ media }, i) => (
+            <div
+              class:list={[
+                'works__media',
+                {
+                  'works__media--contain': media.kind === 'image' && media.fit === 'contain',
+                  'works__media--video-contain': media.kind === 'video' && media.fit === 'contain',
+                  'works__media--backdrop': Boolean(extras[i].backdrop),
+                },
+              ]}
+              data-media={i}
+              data-active={String(i === 0)}
+              style={extras[i].backdrop ? `--backdrop: url('${extras[i].backdrop.src}')` : undefined}
+            >
+              {media.kind === 'video' ? (
+                <video muted loop playsinline preload="none" poster={extras[i].poster?.src}>
+                  <source src={media.src} type="video/mp4" />
+                </video>
+              ) : (
+                <Image src={media.src} alt="" width={880} loading={i === 0 ? 'eager' : 'lazy'} />
+              )}
+            </div>
+          ))
+        }
+        <button class="works__toggle" type="button" data-video-toggle hidden>Pause</button>
+      </div>
+      <span class="works__marks" aria-hidden="true"></span>
+    </div>
+    <figcaption class="meta">
+      {
+        PROJECTS.map(({ media }, i) => (
+          <span class="works__caption" data-caption={i} data-active={String(i === 0)}>
+            {media.alt}
+          </span>
+        ))
+      }
+    </figcaption>
+  </figure>
+
+  <ol class="works__list" role="list">
+    {
+      PROJECTS.map((p, i) => (
+        <li class="works__item" data-item={i} data-active={String(i === 0)}>
+          <h3 class="works__head">
+            <button
+              class="works__trigger"
+              type="button"
+              id={`work-tab-${i}`}
+              aria-expanded="true"
+              aria-controls={`work-panel-${i}`}
+            >
+              <span class="works__num">{pad(i + 1)}</span>
+              <span class="works__title">{p.title}</span>
+              <span class="works__meta">{p.meta}</span>
+              <span class="works__sign" aria-hidden="true" />
+            </button>
+          </h3>
+          <section class="works__panel" id={`work-panel-${i}`} aria-labelledby={`work-tab-${i}`}>
+            <div class="works__panel-inner">
+              <p class="works__summary">{p.summary}</p>
+              {p.links && (
+                <p class="project__links">
+                  {p.links.map((link) => (
+                    <a class="text-link" href={link.href}>
+                      {link.label}{' '}
+                      <span class="arrow" aria-hidden="true">
+                        {link.href.startsWith('/') ? '→' : '↗'}
+                      </span>
+                    </a>
+                  ))}
+                </p>
+              )}
+            </div>
+          </section>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  // Without JS every description stays open and the figure shows the first project.
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-works]')) {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-item]')];
+    const triggers = items.map((item) => item.querySelector<HTMLButtonElement>('.works__trigger')!);
+    const panels = items.map((item) => item.querySelector<HTMLElement>('.works__panel')!);
+    const media = [...root.querySelectorAll<HTMLElement>('[data-media]')];
+    const captions = [...root.querySelectorAll<HTMLElement>('[data-caption]')];
+    const marks = root.querySelector<HTMLElement>('.works__marks');
+    const screen = root.querySelector<HTMLElement>('.works__screen');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-video-toggle]');
+    const videoAt = (i: number) => media[i]?.querySelector('video') ?? null;
+    let active = 0;
+    let onScreen = false;
+    let userPaused = false;
+
+    const syncVideo = () => {
+      media.forEach((_, i) => i !== active && videoAt(i)?.pause());
+      const video = videoAt(active);
+      // Muted autoplay only while the figure is on screen, never with reduced motion or after a manual pause.
+      if (video && onScreen && !userPaused && !reduceMotion.matches) void video.play().catch(() => {});
+      if (video && !onScreen) video.pause();
+      if (toggle) {
+        toggle.hidden = !video;
+        if (video) toggle.textContent = video.paused ? 'Play' : 'Pause';
+      }
+    };
+
+    const select = (next: number, animate = true) => {
+      const changed = next !== active;
+      active = next;
+      items.forEach((item, i) => (item.dataset.active = String(i === next)));
+      triggers.forEach((t, i) => t.setAttribute('aria-expanded', String(i === next)));
+      panels.forEach((panel, i) => (panel.inert = i !== next));
+      media.forEach((m, i) => (m.dataset.active = String(i === next)));
+      captions.forEach((c, i) => (c.dataset.active = String(i === next)));
+      if (changed && animate && marks && !reduceMotion.matches) {
+        marks.animate([{ transform: 'scale(1.08)', opacity: 0 }, { transform: 'none', opacity: 1 }], {
+          duration: 600,
+          easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+        });
+      }
+      syncVideo();
+    };
+
+    root.classList.add('works--js');
+    select(0, false);
+
+    triggers.forEach((trigger, i) => {
+      trigger.addEventListener('click', () => select(i));
+      // Up/Down/Home/End move between projects, as in the WAI accordion pattern.
+      trigger.addEventListener('keydown', (e) => {
+        const to = { ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: triggers.length - 1 }[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        triggers[(to + triggers.length) % triggers.length].focus();
+      });
+    });
+
+    if (screen) {
+      new IntersectionObserver(
+        ([entry]) => {
+          onScreen = entry.isIntersecting;
+          syncVideo();
+        },
+        { threshold: 0.4 },
+      ).observe(screen);
+    }
+
+    toggle?.addEventListener('click', () => {
+      const video = videoAt(active);
+      if (!video) return;
+      userPaused = !video.paused;
+      if (video.paused) void video.play();
+      else video.pause();
+    });
+    media.forEach((_, i) => {
+      videoAt(i)?.addEventListener('play', syncVideo);
+      videoAt(i)?.addEventListener('pause', () => toggle && (toggle.textContent = 'Play'));
+    });
+  }
+</script>

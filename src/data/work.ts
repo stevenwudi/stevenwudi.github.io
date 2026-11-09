@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import handPoster from '../assets/work/3d-hand-tracking.jpg';
 import gesturePoster from '../assets/work/touchless-gesture.jpg';
 import arcore from '../assets/work/arcore-car-damage.jpg';
 import vehiclePose from '../assets/work/vehicle-pose.png';
@@ -9,8 +10,15 @@ export interface Link {
 }
 
 export type Media =
-  | { kind: 'video'; src: string; poster: ImageMetadata; alt: string }
-  | { kind: 'image'; src: ImageMetadata; alt: string; fit?: 'cover' | 'contain' };
+  | { kind: 'video'; src: string; poster: ImageMetadata; alt: string; /** Show the whole frame (wide clips). */ fit?: 'contain' }
+  | {
+      kind: 'image';
+      src: ImageMetadata;
+      alt: string;
+      fit?: 'cover' | 'contain';
+      /** Fill the frame behind a narrow image with a blurred copy of it (e.g. a phone recording). */
+      backdrop?: boolean;
+    };
 
 export interface Project {
   title: string;
@@ -21,6 +29,19 @@ export interface Project {
 }
 
 export const PROJECTS: Project[] = [
+  {
+    title: '3D hand tracking from egocentric video',
+    meta: 'XDOF.ai · 2026',
+    summary:
+      'A production pipeline that turns egocentric recordings into validated, metric 3D hand poses for robot learning. Hands are detected and tracked per frame, initialised with a MANO hand model, then refined by a batched GPU fit — anchored to the stereo point cloud on depth rigs, or driven by 2D reprojection alone on phone video. Temporal smoothing, per-frame quality gates and tiered segment selection keep only trustworthy windows, which are exported as self-contained clips with camera pose for downstream training.',
+    media: {
+      kind: 'video',
+      src: '/media/3d-hand-tracking.mp4',
+      poster: handPoster,
+      alt: 'Left: hands tracked with 3D key-points in a head-mounted camera view. Right: the same hands fitted inside the stereo depth point cloud.',
+      fit: 'contain',
+    },
+  },
   {
     title: 'Touchless gesture control',
     meta: 'FITURE · 2021',
@@ -59,6 +80,7 @@ export const PROJECTS: Project[] = [
       src: arcore,
       alt: 'Phone screen recording: a translucent 3D car model overlaid on the camera view, with damage-classification labels.',
       fit: 'contain',
+      backdrop: true,
     },
     links: [{ label: 'Watch the demo on YouTube', href: 'https://www.youtube.com/watch?v=yKIvFBERICE' }],
   },
@@ -115,6 +137,7 @@ export const HONOURS: Honour[] = [
     of: '2,100',
     event: 'Taobao Clothes Matching',
     detail: 'Alibaba Tianchi · team enemylessRain · season 1',
+    year: 2015,
     href: 'https://tianchi.aliyun.com/competition/rankingList.htm?spm=0.0.0.0.CjYjGh&raceId=231506&season=0',
   },
   {

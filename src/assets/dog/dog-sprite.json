@@ -1,0 +1,10 @@
+{
+  "frameWidth": 144,
+  "frameHeight": 94,
+  "runFrames": 36,
+  "idleFrames": 12,
+  "fps": 30,
+  "ground": 0.9324,
+  "paw": 0.5,
+  "hold": 16
+}

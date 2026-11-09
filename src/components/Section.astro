@@ -4,12 +4,14 @@ interface Props {
   num: string;
   title: string;
   intro?: string;
+  /** Heading above the content instead of beside it (full-width body). */
+  stacked?: boolean;
 }
 
-const { id, num, title, intro } = Astro.props;
+const { id, num, title, intro, stacked = false } = Astro.props;
 ---
 
-<section class="section wrap" id={id} aria-labelledby={`${id}-title`}>
+<section class:list={['section', 'wrap', { 'section--stacked': stacked }]} id={id} aria-labelledby={`${id}-title`}>
   <header class="section__head">
     <h2 class="section__title" id={`${id}-title`}>
       <span class="section__num" aria-hidden="true">{num}</span>

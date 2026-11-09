@@ -1,0 +1,84 @@
+---
+// Fig. 1 — the hero photo of Di and the dog, cut out and inflated into a relief you can turn.
+// Once the rigged, animated version has loaded (and drawn correctly, see figure3d.ts), the photo
+// turns into it by itself, once, through an ink-bleed reveal; clicking the figure switches between
+// the two. No visible caption: the figure is its own control, and the button below is for
+// keyboards (it appears on focus). The GLB and poster come from tools/figure3d; the poster shows
+// until WebGL has drawn a frame (and stays, as the picture, when JavaScript or WebGL are unavailable).
+import { Image } from 'astro:assets';
+import poster from '../assets/portrait/me-and-dog-poster.png';
+
+interface Props {
+  src?: string;
+  /** The rigged, animated version the photo turns into. */
+  runSrc?: string;
+}
+
+const { src = '/models/me-and-dog.glb', runSrc = '/models/me-and-dog-run.glb' } = Astro.props;
+---
+
+<figure class="figure3d" data-figure3d data-src={src} data-run-src={runSrc} data-mode="photo">
+  <div class="figure3d__stage">
+    <Image
+      class="figure3d__poster"
+      src={poster}
+      alt="Di Wu running through shallow surf alongside a black-and-white border collie, cut out of a beach photo."
+      width={520}
+      priority
+    />
+    <canvas class="figure3d__canvas" aria-hidden="true"></canvas>
+    <canvas class="figure3d__veil" aria-hidden="true" hidden></canvas>
+  </div>
+  <figcaption class="meta">
+    <span
+      class="figure3d__progress"
+      role="progressbar"
+      aria-label="Loading the running animation"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      data-figure3d-progress
+    ><span class="figure3d__progress-fill"></span></span>
+    <span class="visually-hidden">Fig. 1 — Me and my dog: a photo that turns into an animated 3D version of us running.</span>
+    <button class="figure3d__toggle" type="button" data-figure3d-action="toggle">
+      <span class="figure3d__toggle-label figure3d__toggle-label--photo">Show the animated version</span>
+      <span class="figure3d__toggle-label figure3d__toggle-label--running">Back to the photo</span>
+    </button>
+  </figcaption>
+</figure>
+
+<script>
+  const figure = document.querySelector<HTMLElement>('[data-figure3d]');
+
+  const hasWebGL = () => {
+    try {
+      const probe = document.createElement('canvas');
+      return Boolean(probe.getContext('webgl2') || probe.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  };
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+
+  if (figure && !saveData && hasWebGL()) {
+    const start = async () => {
+      try {
+        const { mount } = await import('../scripts/figure3d');
+        await mount(figure);
+      } catch (error) {
+        console.warn('figure3d: falling back to the still image', error);
+        figure.classList.add('figure3d--failed');
+      }
+    };
+    // Load three.js only once the figure is near the viewport and the browser is idle.
+    const near = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        near.disconnect();
+        if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 1500 });
+        else setTimeout(start, 200);
+      },
+      { rootMargin: '240px' },
+    );
+    near.observe(figure);
+  }
+</script>

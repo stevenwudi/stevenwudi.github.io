@@ -6,3 +6,10 @@ dist/
 # OS / editor noise
 .DS_Store
 Thumbs.db
+
+# figure3d pipeline outputs (cut-outs, depth maps, intermediate meshes)
+tools/figure3d/out/
+
+# large local source files the site does not serve
+src/assets/me-and-dog-animation-cute.zip
+src/assets/work/3d_hand_tracking.mp4
